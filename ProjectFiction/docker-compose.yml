@@ -1,6 +1,6 @@
 services:
     phpmyadmin:
-        image: phpmyadmin/phpmyadmin:latest
+        image: 'phpmyadmin/phpmyadmin:latest'
         restart: always
         depends_on:
             - mysql
@@ -10,8 +10,7 @@ services:
         networks:
             - sail
         ports:
-            - "8080:80"
-
+            - '8080:80'
     laravel.test:
         build:
             context: ./vendor/laravel/sail/runtimes/8.4
