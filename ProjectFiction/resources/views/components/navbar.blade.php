@@ -10,6 +10,10 @@
                 <a class="nav-link" aria-current="page" href="{{ route('index') }}">Home</a>
                 <a class="nav-link" href="{{ route('show.register') }}">Register</a>
                 <a class="nav-link" href="{{ route('show.login') }}">Login</a>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn">Logout</button>
+                </form>
             </div>
         </div>
     </div>
