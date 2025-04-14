@@ -6,6 +6,9 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav me-auto">
+                <a class="nav-link" href="{{ route("show.upload") }}">Upload</a>
+            </div>
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" aria-current="page" href="{{ route('index') }}">Home</a>
                 <a class="nav-link" href="{{ route('show.register') }}">Register</a>
