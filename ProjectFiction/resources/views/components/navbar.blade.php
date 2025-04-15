@@ -6,17 +6,23 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav me-auto">
-                <a class="nav-link" href="{{ route("show.upload") }}">Upload</a>
-            </div>
+            @auth
+                <div class="navbar-nav me-auto">
+                    <a class="nav-link" href="{{ route("show.upload") }}">Upload</a>
+                </div>
+            @endAuth
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" aria-current="page" href="{{ route('index') }}">Home</a>
-                <a class="nav-link" href="{{ route('show.register') }}">Register</a>
-                <a class="nav-link" href="{{ route('show.login') }}">Login</a>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn">Logout</button>
-                </form>
+                @guest
+                    <a class="nav-link" href="{{ route('show.register') }}">Register</a>
+                    <a class="nav-link" href="{{ route('show.login') }}">Login</a>
+                @endGuest
+                @auth
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn">Logout</button>
+                    </form>
+                @endAuth
             </div>
         </div>
     </div>

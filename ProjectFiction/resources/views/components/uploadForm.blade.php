@@ -1,12 +1,55 @@
-<div>
-<form action="" method="POST">
+<div class="container">
+    <form action="" method="POST" enctype="multipart/form-data">
     @csrf
-    <label for="Title"></label>
-    <input type="text" name="title" id="title" placeholder="Story title">   
-    <div class="input-group mb-3">
-        <label class="input-group-text" for="inputGroupFile01">Upload</label>
-        <input type="file" class="form-control" id="inputGroupFile01">
+
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" name="title" required>
     </div>
-    <button type="submit">Submit</button>
-</form>
+
+    <div class="mb-3">
+        <label for="synopsis" class="form-label">Synopsis</label>
+        <textarea class="form-control" id="synopsis" name="synopsis" rows="3" required></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="genre" class="form-label">Genre</label>
+        <select class="form-select" id="genre" name="genre" required>
+            <option value="">Select a Genre</option>
+            <option value="action">action</option>
+            <option value="essay">Essay</option>
+            <option value="fiction">Fiction</option>
+            <option value="fantasy">Fantasy</option>
+            <option value="sci-fi">Sci-fi</option>
+            <option value="mystery">Mystery</option>
+            <option value="sci-fi">Science Fiction</option>
+            <option value="mystery">Mystery</option>
+            <option value="horror">Horror</option>
+            <option value="historical">Historical</option>
+            <option value="humor">Humor</option>
+            <option value="triller">Triller</option>
+            <option value="mythology">Mythology</option>
+            <option value="romance">romance</option>
+            <option value="biography">Biography</option>
+            <option value="supernatural">Supernatural</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="story_file" class="form-label">Story File</label>
+        <input class="form-control" type="file" id="story_file" name="story_file" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Upload Story</button>
+
+
+            <!--Validation errors-->
+            @if ($errors->any())
+                <ul class="">
+                    @foreach ($errors->all() as $error)
+                        <li class="">{{ $error }}</li>
+                    @endforeach
+                </ul>
+            @endif
+    </form>
 </div>
