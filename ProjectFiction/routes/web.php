@@ -13,7 +13,7 @@ Route::get(uri: '/', action: [\App\Http\Controllers\MainController::class, 'inde
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
 
-    return redirect('/');
+    return redirect('/')->with('message', 'Email verified!');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 // Route::get('/register', function () {

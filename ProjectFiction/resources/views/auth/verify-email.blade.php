@@ -8,4 +8,12 @@
     <button type="submit" id="Resend" class="btn btn-primary">Resend</button>
 </form>
 
+{{-- @isset($message)
+    <h1>{{ $message }}</h1>
+@endisset --}}
+
+@if (\Session::has('message'))
+    <h1>{!! \Session::get('message') !!}</h1>
+@endif
+
 <x-Footer />
