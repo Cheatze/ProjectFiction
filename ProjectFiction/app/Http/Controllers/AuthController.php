@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
@@ -36,10 +37,11 @@ class AuthController extends Controller
         ]);
 
         $user = User::create($validated);
-
+        event(new Registered($user));//This should trigger a listener that sends the email
         Auth::login($user);
 
-        return redirect()->route('index');
+        return redirect()->route('verification.notice');
+        //return redirect()->route('index');
     }
 
     public function login(Request $request)

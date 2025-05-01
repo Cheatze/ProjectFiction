@@ -1,12 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 
 // Route::get('/', function () {
 //     return view('index');
 // })->name("index");
 
 Route::get(uri: '/', action: [\App\Http\Controllers\MainController::class, 'index'])->name('index');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect('/');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
 // Route::get('/register', function () {
 //     return view('register');
@@ -20,12 +28,28 @@ Route::middleware('guest')->group(function () {
     Route::post(uri: '/login', action: [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
 });
 
+//Routes only for those who are logged in
 Route::middleware('auth')->group(function () {
     Route::post(uri: '/logout', action: [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
+});
+
+//Routes only for those who are logged in and verified
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get(uri: '/upload', action: [\App\Http\Controllers\StoriesController::class, 'showUpload'])->name('show.upload');
 });
 
+//Route to verification reminder and verification email resend form
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+//Resends the verification email
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 
 Route::get('/user/{id}', function (string $id) {
