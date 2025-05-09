@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     /**
      * Run the migrations.
+     * Does this have to be changed? I do think I want to save the stories as files with markup
      */
     public function up(): void
     {

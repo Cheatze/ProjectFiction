@@ -1,4 +1,6 @@
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
 <div class="container">
+    {{-- Remove the upload and add a text input with markup --}}
     <form action="" method="POST" enctype="multipart/form-data">
     @csrf
 
@@ -35,10 +37,15 @@
         </select>
     </div>
 
-    <div class="mb-3">
+    {{-- <div class="mb-3">
         <label for="story_file" class="form-label">Story File</label>
         <input class="form-control" type="file" id="story_file" name="story_file" required>
+    </div> --}}
+    <div id="editor" style="height: 200px;" name="story">
+        <p>Hello World!</p>
     </div>
+
+    <br>
 
     <button type="submit" class="btn btn-primary">Upload Story</button>
 
@@ -53,3 +60,12 @@
             @endif
     </form>
 </div>
+<!-- Include the Quill library -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+<!-- Initialize Quill editor -->
+<script>
+    const quill = new Quill('#editor', {
+        theme: 'snow'
+    });
+</script>

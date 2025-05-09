@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class StoriesController extends Controller
 {
-    public function showUpload()
+    public function showWrite()
     {
-        return view('upload');
+        return view('write');
     }
 
     /**

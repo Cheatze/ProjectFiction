@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
 
 //Routes only for those who are logged in and verified
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get(uri: '/upload', action: [\App\Http\Controllers\StoriesController::class, 'showUpload'])->name('show.upload');
+    Route::get(uri: '/write', action: [\App\Http\Controllers\StoriesController::class, 'showWrite'])->name('show.write');
 });
 
 //Route to verification reminder and verification email resend form

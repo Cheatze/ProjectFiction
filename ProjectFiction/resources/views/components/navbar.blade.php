@@ -8,7 +8,7 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             @auth
                 <div class="navbar-nav me-auto">
-                    <a class="nav-link" href="{{ route("show.upload") }}">Upload</a>
+                    <a class="nav-link" href="{{ route("show.write") }}">Write</a>
                 </div>
             @endAuth
             <div class="navbar-nav ms-auto">
