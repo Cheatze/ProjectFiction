@@ -25,7 +25,6 @@ class StoriesController extends Controller
             'Sci-fi',
             'Mystery',
             'Science Fiction',
-            'Mystery',
             'Horror',
             'Historical',
             'Humor',
