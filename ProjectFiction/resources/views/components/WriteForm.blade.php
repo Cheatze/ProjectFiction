@@ -1,7 +1,7 @@
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
 <div class="container">
     {{-- Remove the upload and add a text input with markup --}}
-    <form action="" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('write') }}" method="POST" enctype="multipart/form-data">
     @csrf
 
     <div class="mb-3">
@@ -37,13 +37,10 @@
         </select>
     </div>
 
-    {{-- <div class="mb-3">
-        <label for="story_file" class="form-label">Story File</label>
-        <input class="form-control" type="file" id="story_file" name="story_file" required>
-    </div> --}}
-    <div id="editor" style="height: 200px;" name="story">
-        <p>Hello World!</p>
+    <div id="editor" style="height: 200px;">
+        <p>Write what you want!</p>
     </div>
+    <textarea name="story" id="story-content" style="display: none;"></textarea>
 
     <br>
 
@@ -60,6 +57,15 @@
             @endif
     </form>
 </div>
+
+<script>
+    const form = document.querySelector('form');
+    const storyContent = document.querySelector('#story-content');
+
+    form.addEventListener('submit', function (event) {
+        storyContent.value = quill.root.innerHTML;
+    });
+</script>
 <!-- Include the Quill library -->
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
