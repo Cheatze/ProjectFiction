@@ -14,6 +14,17 @@ class StoriesController extends Controller
         return view('write');
     }
 
+    public function showNew()
+    {
+        $sList = Story::all();
+        //eloquent get newest and pass through
+        return view('browse')->with('stories', $sList);
+    }
+
+    /**
+     * Takes form data validates or redirects it and then saves the story to the db
+     * @param \Illuminate\Http\Request $request
+     */
     public function submitStory(Request $request)
     {
         // Define the allowed genres (must match your form's options exactly!)

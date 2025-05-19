@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 
 Route::get(uri: '/', action: [\App\Http\Controllers\MainController::class, 'index'])->name('index');
 
+Route::get(uri: '/browse', action: [\App\Http\Controllers\StoriesController::class, 'showNew'])->name('show.newest');
+
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
 

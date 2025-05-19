@@ -6,11 +6,14 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            @auth
+            
                 <div class="navbar-nav me-auto">
+                    @auth
                     <a class="nav-link" href="{{ route("show.write") }}">Write</a>
+                    @endAuth
+                    <a class="nav-link" href="{{ route("show.newest") }}">Newest</a>
                 </div>
-            @endAuth
+            
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" aria-current="page" href="{{ route('index') }}">Home</a>
                 @guest
