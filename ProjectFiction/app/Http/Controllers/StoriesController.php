@@ -27,13 +27,12 @@ class StoriesController extends Controller
      */
     public function submitStory(Request $request)
     {
-        // Define the allowed genres (must match your form's options exactly!)
+        // Define the genres (must match your form's options exactly!)
         $allowedGenres = [
-            'action',
+            'Action',
             'Essay',
             'Fiction',
             'Fantasy',
-            'Sci-fi',
             'Mystery',
             'Science Fiction',
             'Horror',

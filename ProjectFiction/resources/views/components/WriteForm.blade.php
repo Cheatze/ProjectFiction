@@ -18,7 +18,7 @@
         <label for="genre" class="form-label">Genre</label>
         <select class="form-select" id="genre" name="genre" required>
             <option value="">Select a Genre</option>
-            <option value="Action">action</option>
+            <option value="Action">Action</option>
             <option value="Essay">Essay</option>
             <option value="Fiction">Fiction</option>
             <option value="Fantasy">Fantasy</option>

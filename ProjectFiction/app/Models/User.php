@@ -46,4 +46,12 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the stories for the user.
+     */
+    public function stories()
+    {
+        return $this->hasMany(Story::class);
+    }
 }
