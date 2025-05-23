@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Story;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -16,9 +17,15 @@ class StoriesController extends Controller
 
     public function showNew()
     {
-        $sList = Story::all();
+        // $sList = Story::all();
+        // $nList = Story::select('id', 'title', 'synopsis')->orderBy('id', 'desc');
+        $list = Story::with('user') // This is the key!
+            ->select('id', 'title', 'synopsis', 'user_id')
+            ->orderBy('id', 'desc')
+            ->limit(15)
+            ->get();
         //eloquent get newest and pass through
-        return view('browse')->with('stories', $sList);
+        return view('browse')->with('stories', $list);
     }
 
     /**
