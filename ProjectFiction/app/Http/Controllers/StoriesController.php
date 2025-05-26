@@ -17,14 +17,13 @@ class StoriesController extends Controller
 
     public function showNew()
     {
-        // $sList = Story::all();
         // $nList = Story::select('id', 'title', 'synopsis')->orderBy('id', 'desc');
         $list = Story::with('user') // This is the key!
             ->select('id', 'title', 'synopsis', 'user_id')
             ->orderBy('id', 'desc')
-            ->limit(15)
-            ->get();
-        //eloquent get newest and pass through
+            ->paginate(15);
+
+        //dd($list);
         return view('browse')->with('stories', $list);
     }
 

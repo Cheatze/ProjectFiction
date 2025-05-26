@@ -14,5 +14,6 @@
         </div>
     @endforeach
 </ul>
+{{ $stories->links() }}
 
 <x-Footer />
