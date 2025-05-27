@@ -12,48 +12,48 @@
 <div class="container">
     <div class="row">
         <div class="col-sm">
-            <a href="">Action</a>
+            <a href="{{ route('stories.genre', ['genre' => 'action']) }}">Action</a>
         </div>
         <div class="col-sm">
-            <a href="">Essay</a>
+            <a href="{{ route('stories.genre', ['genre' => 'essay']) }}">Essay</a>
         </div>
         <div class="col-sm">
-            <a href="">Fiction</a>
+            <a href="{{ route('stories.genre', ['genre' => 'fiction']) }}">Fiction</a>
         </div>
         <div class="col-sm">
-            <a href="">Fantasy</a>
+            <a href="{{ route('stories.genre', ['genre' => 'fantasy']) }}">Fantasy</a>
         </div>
         <div class="col-sm">
-            <a href="">Mystery</a>
+            <a href="{{ route('stories.genre', ['genre' => 'mystery']) }}">Mystery</a>
         </div>
         <div class="col-sm">
-            <a href="">Science Fiction</a>
+            <a href="{{ route('stories.genre', ['genre' => 'Science Fiction']) }}">Science Fiction</a>
         </div>
         <div class="col-sm">
-            <a href="">Horror</a>
+            <a href="{{ route('stories.genre', ['genre' => 'Horror']) }}">Horror</a>
         </div>
     </div>
         <div class="row">
             <div class="col-sm">
-                <a href="">Historical</a>
+                <a href="{{ route('stories.genre', ['genre' => 'Historical']) }}">Historical</a>
             </div>
             <div class="col-sm">
-                <a href="">Humor</a>
+                <a href="{{ route('stories.genre', ['genre' => 'Humor']) }}">Humor</a>
             </div>
             <div class="col-sm">
-                <a href="">Thriller</a>
+                <a href="{{ route('stories.genre', ['genre' => 'Thriller']) }}">Thriller</a>
             </div>
             <div class="col-sm">
-                <a href="">Mythology</a>
+                <a href="{{ route('stories.genre', ['genre' => 'Mythology']) }}">Mythology</a>
             </div>
             <div class="col-sm">
-                <a href="">Romance</a>
+                <a href="{{ route('stories.genre', ['genre' => 'Romance']) }}">Romance</a>
             </div>
             <div class="col-sm">
-                <a href="">Biography</a>
+                <a href="{{ route('stories.genre', ['genre' => 'Biography']) }}">Biography</a>
             </div>
             <div class="col-sm">
-                <a href="">Supernatural</a>
+                <a href="{{ route('stories.genre', ['genre' => 'Supernatural']) }}">Supernatural</a>
             </div>
         </div>
 </div>

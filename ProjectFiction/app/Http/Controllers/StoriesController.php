@@ -15,15 +15,29 @@ class StoriesController extends Controller
         return view('write');
     }
 
+    /**
+     * 
+     * Shows a paginated list of stories from new to old
+     * @return \Illuminate\Contracts\View\View
+     */
     public function showNew()
     {
-        // $nList = Story::select('id', 'title', 'synopsis')->orderBy('id', 'desc');
         $list = Story::with('user') // This is the key!
-            ->select('id', 'title', 'synopsis', 'user_id')
+            ->select('id', 'title', 'genre', 'synopsis', 'user_id')
             ->orderBy('id', 'desc')
             ->paginate(15);
 
-        //dd($list);
+        return view('browse')->with('stories', $list);
+    }
+
+    public function showGenre($genre)
+    {
+        $list = Story::with('user') // This is the key!
+            ->select('id', 'title', 'genre', 'synopsis', 'user_id')
+            ->orderBy('id', 'desc')
+            ->where('genre', $genre)
+            ->paginate(15);
+
         return view('browse')->with('stories', $list);
     }
 

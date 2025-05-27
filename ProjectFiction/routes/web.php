@@ -8,9 +8,24 @@ use Illuminate\Http\Request;
 //     return view('index');
 // })->name("index");
 
+/**
+ * Shows the main/index page
+ */
 Route::get(uri: '/', action: [\App\Http\Controllers\MainController::class, 'index'])->name('index');
 
+/**
+ * Shows the pagination of stories from new to old
+ */
 Route::get(uri: '/browse', action: [\App\Http\Controllers\StoriesController::class, 'showNew'])->name('show.newest');
+
+/**
+ * Shows the pagination of stories from new to old by genre
+ */
+Route::get('/stories/{genre}', [\App\Http\Controllers\StoriesController::class, 'showGenre'])->name('stories.genre');
+
+
+Route::get('/story/{id}', [\App\Http\Controllers\StoriesController::class, 'showStory'])->name('stories.read');
+
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
