@@ -21,4 +21,9 @@ class UserController extends Controller
 
         return view('profile')->with('user', $user)->with('stories', $list);
     }
+
+    public function subscribeToUser(Request $request)
+    {
+
+    }
 }

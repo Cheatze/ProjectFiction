@@ -4,6 +4,16 @@
 
 <h3>Stories</h3>
 
+@if (Auth::id() != $user->id)
+    <div>
+        <form action="">
+            @csrf
+            <input type="hidden" value="{{ $user->id }}" name="id">
+            <button>Subscribe to {{ $user->name }}</button>
+        </form>
+    </div>
+@endif
+
 <div>
 <ul>
     @foreach ($stories as $story)
