@@ -16,9 +16,10 @@
             </li>
             @if (Auth::id() == $user->id)
                 <li>
-                    <form action="" method="POST">
+                    <form action="{{ route('delete') }}" method="POST" onsubmit="return confirm('Do you really want to delete this story?')">
                         @csrf
-                        <button>Delete</button>
+                        <input type="hidden" value="{{ $story->id }}">
+                        <button>Delete {{ $story->title }}</button>
                     </form>
                 </li>
             @endif

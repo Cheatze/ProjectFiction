@@ -59,8 +59,10 @@ Route::middleware('auth')->group(function () {
 //Routes only for those who are logged in and verified
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get(uri: '/write', action: [\App\Http\Controllers\StoriesController::class, 'showWrite'])->name('show.write');
-    //The route for submitting a story goes here
+    //The route for submitting a story
     Route::post(uri: '/write', action: [\App\Http\Controllers\StoriesController::class, 'submitStory'])->name('write');
+    //The rote for deleting a story
+    Route::post(uri: '/delete', action: [\App\Http\Controllers\StoriesController::class, 'deleteStory'])->name('delete');
 });
 
 //Route to verification reminder and verification email resend form
