@@ -63,6 +63,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post(uri: '/write', action: [\App\Http\Controllers\StoriesController::class, 'submitStory'])->name('write');
     //The rote for deleting a story
     Route::post(uri: '/delete', action: [\App\Http\Controllers\StoriesController::class, 'deleteStory'])->name('delete');
+    //The route for subscribing to a user
+    Route::post(uri: '/subscribe', action: [\App\Http\Controllers\UserController::class, 'subscribeToUser'])->name('subscribe');
 });
 
 //Route to verification reminder and verification email resend form

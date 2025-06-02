@@ -2,19 +2,20 @@
 <x-navbar />
 <h1>Profile page for {{ $user->name }}</h1>
 
-<h3>Stories</h3>
-
+<hr>
 @if (Auth::id() != $user->id)
     <div>
-        <form action="">
+        <form action="{{ route('subscribe') }}" method="POST">
             @csrf
             <input type="hidden" value="{{ $user->id }}" name="id">
             <button>Subscribe to {{ $user->name }}</button>
         </form>
     </div>
+    <br>
 @endif
 
 <div>
+    <h3>Stories</h3>
 <ul>
     @foreach ($stories as $story)
         <div>
