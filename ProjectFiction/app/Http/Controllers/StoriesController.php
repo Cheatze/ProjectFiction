@@ -108,14 +108,17 @@ class StoriesController extends Controller
         return redirect()->route('index')->with('success', 'Story submitted successfully!');
     }
 
+    /**
+     * Delete one of your stories
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function deleteStory(Request $request)
     {
-        $story::where('user_id', Auth::user()->id)
+        $story = Story::where('user_id', Auth::id())
             ->where('id', $request->input('id'))
-            ->first();
-
-        //Als het goed is
-        Story::where('id', $request->input('id'))->delete();
+            ->first()
+            ->delete();
 
         return back();
     }

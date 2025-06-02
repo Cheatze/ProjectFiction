@@ -18,7 +18,7 @@
                 <li>
                     <form action="{{ route('delete') }}" method="POST" onsubmit="return confirm('Do you really want to delete this story?')">
                         @csrf
-                        <input type="hidden" value="{{ $story->id }}">
+                        <input type="hidden" value="{{ $story->id }}" name="id">
                         <button>Delete {{ $story->title }}</button>
                     </form>
                 </li>
