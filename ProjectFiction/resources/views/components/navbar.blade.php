@@ -21,6 +21,7 @@
                     <a class="nav-link" href="{{ route('show.login') }}">Login</a>
                 @endGuest
                 @auth
+                    <a href="{{ route('profile.show', ['id' => Auth::id()]) }}">{{ Auth::user()->name }}</a>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="btn">Logout</button>
