@@ -24,8 +24,13 @@ Route::get(uri: '/browse', action: [\App\Http\Controllers\StoriesController::cla
 Route::get('/stories/{genre}', [\App\Http\Controllers\StoriesController::class, 'showGenre'])->name('stories.genre');
 
 
+/**
+ * Shows the read page for the story with a certain id
+ */
 Route::get('/story/{id}', [\App\Http\Controllers\StoriesController::class, 'showStory'])->name('stories.read');
 
+//Make a UserController?
+Route::get('/profile/{id}', [\App\Http\Controllers\UserController::class, 'showProfile'])->name('profile.show');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();

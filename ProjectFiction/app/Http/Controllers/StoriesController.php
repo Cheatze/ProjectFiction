@@ -41,6 +41,13 @@ class StoriesController extends Controller
         return view('browse')->with('stories', $list);
     }
 
+    public function showStory($id)
+    {
+        $story = Story::with('user')->where('id', $id)->first();
+
+        return view('read')->with('story', $story);
+    }
+
     /**
      * Takes form data validates or redirects it and then saves the story to the db
      * @param \Illuminate\Http\Request $request
