@@ -16,12 +16,26 @@ class UserController extends Controller
 
         $user = User::where('id', $id)->first();
 
+        $currentUser = Auth::user();
+
         $list = Story::where('user_id', $id)
             ->select('id', 'title', 'genre', 'synopsis')
             ->orderBy('id', 'desc')
             ->paginate(15);
 
-        return view('profile')->with('user', $user)->with('stories', $list);
+        $isSubscribed = false;
+
+        if ($currentUser && $currentUser->id !== $id) {
+            // Check if the current user is subscribed to the profile owner
+            $isSubscribed = $currentUser->subscribedTo()
+                ->where('subscribed_to_id', $id)
+                ->exists();
+        }
+
+        return view('profile')
+            ->with('user', $user)
+            ->with('stories', $list)
+            ->with('isSubscribed', $isSubscribed);
     }
 
     public function subscribeToUser(Request $request)
@@ -57,15 +71,36 @@ class UserController extends Controller
             return back();
 
         } catch (\Exception $e) {
-            // You might want more specific error handling, e.g., checking for IntegrityConstraintViolationException
-            // if the unique constraint is the primary concern.
             return back()->with('error', 'Could not subscribe. Perhaps you are already subscribed.');
         }
 
     }
 
-    public function unsubscribeToUser(Request $request)
+    public function unsubscribeFromUser(Request $request)
     {
+
+        $subscriberId = Auth::id(); // The ID of the current authenticated user
+        $subscribedToId = $request->input('id');
+
+        $subscriber = Auth::user();
+
+        try {
+            // Detach the subscription
+            // The `detach` method removes the entry from the pivot table.
+            // It will silently do nothing if the subscription doesn't exist.
+            $detachedCount = $subscriber->subscribedTo()->detach($subscribedToId);
+
+            if ($detachedCount > 0) {
+                return back();
+            } else {
+                // This case handles if they tried to unsubscribe from someone they weren't subscribed to
+                return back()->with('info', 'You were not subscribed to this user.');
+            }
+
+        } catch (\Exception $e) {
+            // Handle any database errors
+            return back()->with('error', 'An error occurred while unsubscribing.');
+        }
 
     }
 }

@@ -3,7 +3,7 @@
 <h1>Profile page for {{ $user->name }}</h1>
 
 <hr>
-@if (Auth::id() != $user->id)
+@if (Auth::id() != $user->id && $isSubscribed == false)
     <div>
         <form action="{{ route('subscribe') }}" method="POST">
             @csrf
@@ -12,6 +12,14 @@
         </form>
     </div>
     <br>
+@else
+
+    <form action="{{ route('unsubscribe') }}" method="POST">
+        @csrf
+        @method('DELETE')
+        <input type="hidden" value="{{ $user->id }}" name="id">
+        <button type="submit">Unsubscribe</button>
+
 @endif
 
 <div>

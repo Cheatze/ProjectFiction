@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Events\StoryPosted;
 
 class StoriesController extends Controller
 {
@@ -103,6 +104,8 @@ class StoriesController extends Controller
         $story->content = $request->input('story');
         $story->user_id = $user->id; // Assign the current user's ID
         $story->save();
+
+        //event here with $story as argument
 
         // Redirect to a success page or display a success message
         return redirect()->route('index')->with('success', 'Story submitted successfully!');
