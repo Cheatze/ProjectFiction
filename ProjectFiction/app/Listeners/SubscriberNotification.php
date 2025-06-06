@@ -14,9 +14,9 @@ use App\Notifications\NewStoryNotification;
 // use Illuminate\Notifications\Notification;
 // use Illuminate\Notifications\Messages\MailMessage;
 
-class SubscriberNotification //implements ShouldQueue 
+class SubscriberNotification implements ShouldQueue
 {
-    //use InteractsWithQueue;
+    use InteractsWithQueue;
 
     /**
      * Create the event listener.
