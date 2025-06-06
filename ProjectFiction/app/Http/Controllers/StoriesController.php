@@ -105,7 +105,8 @@ class StoriesController extends Controller
         $story->user_id = $user->id; // Assign the current user's ID
         $story->save();
 
-        //event here with $story as argument
+        //Has access to the story id if things are right
+        event(new StoryPosted($story));
 
         // Redirect to a success page or display a success message
         return redirect()->route('index')->with('success', 'Story submitted successfully!');
