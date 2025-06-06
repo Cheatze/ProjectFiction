@@ -27,7 +27,7 @@ class UserController extends Controller
 
         if ($currentUser && $currentUser->id !== $id) {
             // Check if the current user is subscribed to the profile owner
-            $isSubscribed = $currentUser->subscribedTo()
+            $isSubscribed = $currentUser->subscribedTo() //Ignore the red, this works
                 ->where('subscribed_to_id', $id)
                 ->exists();
         }

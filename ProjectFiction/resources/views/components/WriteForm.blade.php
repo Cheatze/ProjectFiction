@@ -1,6 +1,6 @@
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
 <div class="container">
-    {{-- Remove the upload and add a text input with markup --}}
+
     <form action="{{ route('write') }}" method="POST" enctype="multipart/form-data" onsubmit="setStory()">
     @csrf
 
@@ -66,15 +66,7 @@
             theme: 'snow'
         });
 
-        // const form = document.querySelector('form');
         const storyContent = document.querySelector('#story-content');
-
-        // form.addEventListener('submit', function (event) {
-        //     storyContent.value = quill.root.innerHTML;
-        // });
-
-        // const oldStoryContent = document.querySelector('#story-content').value;
-        // quill.root.innerHTML = oldStoryContent;
 
 
         function setStory(){
