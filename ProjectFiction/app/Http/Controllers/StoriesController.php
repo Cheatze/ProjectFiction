@@ -42,9 +42,13 @@ class StoriesController extends Controller
         return view('browse')->with('stories', $list);
     }
 
-    public function showSearch($search)
+    public function showSearch(Request $request)
     {
-        $searchTerm = $search->input('search');
+        $searchTerm = $request->input('search');
+
+        $request->validate([
+            'search' => 'required|string|min:1', // Require at least 1 character
+        ]);
 
         $list = Story::with('user') // Start a new query builder instance for the Story model
             ->where('title', 'LIKE', '%' . $searchTerm . '%')
