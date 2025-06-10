@@ -22,6 +22,15 @@
 
 @endif
 
+    <!--Validation errors-->
+    @if ($error->any())
+        <ul class="">
+            @foreach ($error->all() as $error)
+                <li class="">{{ $error }}</li>
+            @endforeach
+         </ul>
+    @endif
+
 <div>
     <h3>Stories</h3>
 <ul>

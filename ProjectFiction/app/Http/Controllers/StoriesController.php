@@ -42,6 +42,20 @@ class StoriesController extends Controller
         return view('browse')->with('stories', $list);
     }
 
+    public function showSearch($search)
+    {
+        $searchTerm = $search->input('search');
+
+        $list = Story::with('user') // Start a new query builder instance for the Story model
+            ->where('title', 'LIKE', '%' . $searchTerm . '%')
+            ->orWhere('synopsis', 'LIKE', '%' . $searchTerm . '%')
+            ->select('id', 'title', 'genre', 'synopsis', 'user_id')
+            ->orderBy('id', 'desc')
+            ->paginate(15);
+
+        return view('browse')->with('stories', $list);
+    }
+
     public function showStory($id)
     {
         $story = Story::with('user')->where('id', $id)->first();

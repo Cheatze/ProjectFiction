@@ -94,7 +94,7 @@ class UserController extends Controller
                 return back();
             } else {
                 // This case handles if they tried to unsubscribe from someone they weren't subscribed to
-                return back()->with('info', 'You were not subscribed to this user.');
+                return back()->with('error', 'You were not subscribed to this user.');
             }
 
         } catch (\Exception $e) {
