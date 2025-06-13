@@ -23,13 +23,13 @@
 @endif
 
     <!--Validation errors-->
-    @if ($error->any())
+    {{-- @if ($error->any())
         <ul class="">
             @foreach ($error->all() as $error)
                 <li class="">{{ $error }}</li>
             @endforeach
          </ul>
-    @endif
+    @endif --}}
 
 <div>
     <h3>Stories</h3>
@@ -51,7 +51,7 @@
                     </form>
                 </li>
             @endif
-            <br>
+            <hr>
         </div>
     @endforeach
 </ul>

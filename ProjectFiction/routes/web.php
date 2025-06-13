@@ -45,16 +45,19 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     return redirect('/')->with('message', 'Email verified!');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
-// Route::get('/register', function () {
-//     return view('register');
-// })->name("show.register");
 
+/**
+ * Routes for those not logged in
+ */
 Route::middleware('guest')->group(function () {
     Route::get(uri: '/register', action: [\App\Http\Controllers\AuthController::class, 'showRegister'])->name('show.register');
     Route::get(uri: '/login', action: [\App\Http\Controllers\AuthController::class, 'showLogin'])->name('show.login');
 
     Route::post(uri: '/register', action: [\App\Http\Controllers\AuthController::class, 'register'])->name('register');
     Route::post(uri: '/login', action: [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
+
+    Route::get(uri: '/forgot-password', action: [\App\Http\Controllers\AuthController::class, 'showReset'])->name('password.request');
+    Route::post(uri: '/forgot-password', action: [\App\Http\Controllers\AuthController::class, 'sendResetEmail'])->name('password.email');
 });
 
 //Routes only for those who are logged in

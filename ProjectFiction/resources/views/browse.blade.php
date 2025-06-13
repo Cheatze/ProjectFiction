@@ -12,6 +12,7 @@
         <li>{{ $story->genre }}</li>
         <li><p>{{ $story->synopsis }}</p></li>
         </div>
+        <hr>
     @endforeach
 </ul>
 </div>

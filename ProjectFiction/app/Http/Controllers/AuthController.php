@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
@@ -22,6 +23,33 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+    public function showReset()
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function sendResetEmail(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        return $status === Password::ResetLinkSent
+            ? back()->with(['status' => __($status)])
+            : back()->withErrors(['email' => __($status)]);
+    }
+
+    public function showResetForm(Request $request, $token = null)
+    {
+
+    }
+
+    public function resetPassword(Request $request)
+    {
+
+    }
 
     /**
      * Creates a new user in the db and automatically logs the user in with that account
