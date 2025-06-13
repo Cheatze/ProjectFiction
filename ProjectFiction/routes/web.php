@@ -58,6 +58,8 @@ Route::middleware('guest')->group(function () {
 
     Route::get(uri: '/forgot-password', action: [\App\Http\Controllers\AuthController::class, 'showReset'])->name('password.request');
     Route::post(uri: '/forgot-password', action: [\App\Http\Controllers\AuthController::class, 'sendResetEmail'])->name('password.email');
+    Route::get(uri: '/forgot-password/{token}', action: [\App\Http\Controllers\AuthController::class, 'showReset'])->name('password.reset');
+    Route::post(uri: '/reset-password', action: [\App\Http\Controllers\AuthController::class, 'resetPassword'])->name('password.update');
 });
 
 //Routes only for those who are logged in

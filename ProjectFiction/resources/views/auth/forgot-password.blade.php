@@ -3,7 +3,8 @@
 
 <h3>Password Forgotten</h3>
 
-<form action="" method="POST">
+<form action="{{ route('password.email') }}" method="POST">
+    @csrf
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input type="email" class="form-control w-auto" name="email" value="{{ old('email') }}" required>
