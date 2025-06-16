@@ -3,7 +3,7 @@
 
 <h3>Password Reset</h3>
 
-<form action="" method="POST">
+<form action="{{ route('password.update') }}" method="POST">
     @csrf
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
