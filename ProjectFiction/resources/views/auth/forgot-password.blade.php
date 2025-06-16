@@ -8,7 +8,15 @@
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input type="email" class="form-control w-auto" name="email" value="{{ old('email') }}" required>
+        @error('email')
+            <span>{{ $message }}</span>
+        @enderror
     </div>
+        @if (session('status'))
+            <div class="alert alert-success">
+                {{ session('status') }}
+            </div>
+        @endif
     <button type="submit" class="btn btn-primary">Send reset email</button>
 
 
