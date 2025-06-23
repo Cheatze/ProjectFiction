@@ -5,6 +5,9 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 
+use Illuminate\Support\Facades\Route;
+use App\Models\Story;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -21,5 +24,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+
+
+        Route::model('story', Story::with('user'));
     }
 }

@@ -12,19 +12,19 @@
 <div class="container">
     <div class="row">
         <div class="col-sm">
-            <a href="{{ route('stories.genre', ['genre' => 'action']) }}">Action</a>
+            <a href="{{ route('stories.genre', ['genre' => 'Action']) }}">Action</a>
         </div>
         <div class="col-sm">
-            <a href="{{ route('stories.genre', ['genre' => 'essay']) }}">Essay</a>
+            <a href="{{ route('stories.genre', ['genre' => 'Essay']) }}">Essay</a>
         </div>
         <div class="col-sm">
-            <a href="{{ route('stories.genre', ['genre' => 'fiction']) }}">Fiction</a>
+            <a href="{{ route('stories.genre', ['genre' => 'Fiction']) }}">Fiction</a>
         </div>
         <div class="col-sm">
-            <a href="{{ route('stories.genre', ['genre' => 'fantasy']) }}">Fantasy</a>
+            <a href="{{ route('stories.genre', ['genre' => 'Fantasy']) }}">Fantasy</a>
         </div>
         <div class="col-sm">
-            <a href="{{ route('stories.genre', ['genre' => 'mystery']) }}">Mystery</a>
+            <a href="{{ route('stories.genre', ['genre' => 'Mystery']) }}">Mystery</a>
         </div>
         <div class="col-sm">
             <a href="{{ route('stories.genre', ['genre' => 'Science Fiction']) }}">Science Fiction</a>

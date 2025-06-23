@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
+use App\Http\Requests\RegisterUserRequest;
+use App\Http\Requests\SendResetEmailRequest;
+use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Requests\LoginRequest;
 
 class AuthController extends Controller
 {
@@ -36,9 +40,9 @@ class AuthController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function sendResetEmail(Request $request)
+    public function sendResetEmail(SendResetEmailRequest $request)
     {
-        $request->validate(['email' => 'required|email']);
+        //$request->validate(['email' => 'required|email']);
 
         $status = Password::sendResetLink(
             $request->only('email')
@@ -49,18 +53,29 @@ class AuthController extends Controller
             : back()->withErrors(['email' => __($status)]);
     }
 
-    public function showResetForm($token = null)
+    /**
+     * Shows the view with the form where the user can reset their password
+     * Gives the token send to the user in the email to that view
+     * @param mixed $token
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function showResetForm($token)
     {
         return view('auth.reset-password', ['token' => $token]);
     }
 
-    public function resetPassword(Request $request)
+    /**
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function resetPassword(ResetPasswordRequest $request)
     {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        // $request->validate([
+        //     'token' => 'required',
+        //     'email' => 'required|email',
+        //     'password' => 'required|min:8|confirmed',
+        // ]);
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
@@ -85,28 +100,26 @@ class AuthController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return mixed|\Illuminate\Http\RedirectResponse
      */
-    public function register(Request $request)
+    public function register(RegisterUserRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|unique:users|max:120|min:3',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|max:120|min:8|confirmed'
-        ]);
+
+        $validated = $request->validated();
 
         $user = User::create($validated);
         event(new Registered($user));//This should trigger a listener that sends the email
         Auth::login($user);
 
         return redirect()->route('verification.notice');
-        //return redirect()->route('index');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string'
-        ]);
+        // $validated = $request->validate([
+        //     'email' => 'required|email',
+        //     'password' => 'required|string'
+        // ]);
+
+        $validated = $request->validated();
 
         if (Auth::attempt($validated)) {
             $request->session()->regenerate();

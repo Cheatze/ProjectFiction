@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Events\StoryPosted;
+use App\Enums\Genre;
+use Illuminate\Validation\Rules\Enum;
+use App\Http\Requests\SubmitStoryRequest;
+use App\Http\Requests\SearchRequest;
 
 class StoriesController extends Controller
 {
@@ -16,6 +20,10 @@ class StoriesController extends Controller
         return view('write');
     }
 
+    //paginate,orderBy,select
+
+
+
     /**
      * 
      * Shows a paginated list of stories from new to old
@@ -23,45 +31,53 @@ class StoriesController extends Controller
      */
     public function showNew()
     {
-        $list = Story::with('user') // This is the key!
-            ->select('id', 'title', 'genre', 'synopsis', 'user_id')
-            ->orderBy('id', 'desc')
+        $list = Story::withAuthor()->paginate(15);
+
+        return view('browse')->with('stories', $list);
+    }
+
+    /**
+     * 
+     * Returns a paginated view of stories with a certain genre using an enum
+     * @param \app\Enums\Genre $genre
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function showGenre(Genre $genre)
+    {
+        $theGenre = $genre->value;
+
+        $list = Story::withAuthor()
+            ->where('genre', $theGenre)
             ->paginate(15);
 
         return view('browse')->with('stories', $list);
     }
 
-    public function showGenre($genre)
+    public function showSearch(SearchRequest $request)
     {
-        $list = Story::with('user') // This is the key!
-            ->select('id', 'title', 'genre', 'synopsis', 'user_id')
-            ->orderBy('id', 'desc')
-            ->where('genre', $genre)
-            ->paginate(15);
-
-        return view('browse')->with('stories', $list);
-    }
-
-    public function showSearch(Request $request)
-    {
+        //$validator = $request->validated();
         $searchTerm = $request->input('search');
 
-        $request->validate([
-            'search' => 'required|string|min:1', // Require at least 1 character
-        ]);
+        // $request->validate([
+        //     'search' => 'required|string|min:1', // Require at least 1 character
+        // ]);
 
-        $list = Story::with('user') // Start a new query builder instance for the Story model
+        $list = Story::withAuthor() // Start a new query builder instance for the Story model
             ->where('title', 'LIKE', '%' . $searchTerm . '%')
             ->orWhere('synopsis', 'LIKE', '%' . $searchTerm . '%')
-            ->select('id', 'title', 'genre', 'synopsis', 'user_id')
-            ->orderBy('id', 'desc')
             ->paginate(15);
 
         return view('browse')->with('stories', $list);
     }
 
+    /**
+     * Returns a view with the content of a certain story
+     * @param mixed $id
+     * @return \Illuminate\Contracts\View\View
+     */
     public function showStory($id)
     {
+        //Could possibly be replaced with type casting but I don't yet see how
         $story = Story::with('user')->where('id', $id)->first();
 
         return view('read')->with('story', $story);
@@ -71,36 +87,9 @@ class StoriesController extends Controller
      * Takes form data validates or redirects it and then saves the story to the db
      * @param \Illuminate\Http\Request $request
      */
-    public function submitStory(Request $request)
+    public function submitStory(SubmitStoryRequest $request)
     {
-        // Define the genres (must match your form's options exactly!)
-        $allowedGenres = [
-            'Action',
-            'Essay',
-            'Fiction',
-            'Fantasy',
-            'Mystery',
-            'Science Fiction',
-            'Horror',
-            'Historical',
-            'Humor',
-            'Thriller',
-            'Mythology',
-            'romance',
-            'Biography',
-            'Supernatural'
-        ];
-
-        // Validate the incoming data
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'synopsis' => 'required|string|max:500|min:25',
-            'genre' => ['required', 'string', 'in:' . implode(',', $allowedGenres)],
-            'story' => 'required|string|max:1024000|min:500', // 1MB in kilobytes (1024 * 1000)
-        ], [
-            'story.max' => 'The story content must not exceed 1MB.',
-            'genre.in' => 'Invalid genre selected.',
-        ]);
+        $validator = $request->validated();
 
         if ($validator->fails()) {
             return back()
@@ -110,9 +99,6 @@ class StoriesController extends Controller
 
         // Get the currently authenticated user
         $user = Auth::user();
-
-        // Or, more concisely:
-        // $userId = Auth::id();
 
         // Create a new Story instance
         $story = new Story();
@@ -137,6 +123,7 @@ class StoriesController extends Controller
      */
     public function deleteStory(Request $request)
     {
+        //Nog een plek waar ik niet zie hoe model binding zou kunnen werken
         $story = Story::where('user_id', Auth::id())
             ->where('id', $request->input('id'))
             ->first()
