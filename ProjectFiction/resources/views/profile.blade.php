@@ -20,8 +20,7 @@
         </form>
     </div>
     <br>
-@else
-
+@elseif (Auth::id() != $user->id)
     <form action="{{ route('unsubscribe') }}" method="POST">
         @csrf
         @method('DELETE')

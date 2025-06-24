@@ -20,19 +20,20 @@ class UserController extends Controller
 
         $currentUser = Auth::user();
 
-        $list = Story::where('user_id', $id)
+        $list = $user->stories() // Access the relationship
             ->select('id', 'title', 'genre', 'synopsis')
             ->orderBy('id', 'desc')
             ->paginate(15);
 
         $isSubscribed = false;
-
-        if ($currentUser && $currentUser->id !== $id) {
-            // Check if the current user is subscribed to the profile owner
-            $isSubscribed = $currentUser->subscribedTo() //Ignore the red, this works
-                ->where('subscribed_to_id', $id)
-                ->exists();
-        }
+        $isSubscribed = $currentUser->can('isSubscribed', $user);
+        //
+        // if ($currentUser && $currentUser->id !== $id) {
+        //     // Check if the current user is subscribed to the profile owner
+        //     $isSubscribed = $currentUser->subscribedTo() //Ignore the red, this works
+        //         ->where('subscribed_to_id', $id)
+        //         ->exists();
+        // }
 
         return view('profile')
             ->with('user', $user)
