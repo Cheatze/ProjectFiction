@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use App\Enums\Genre;
+//use App\Services\SubscriptionService;
 
 // Route::get('/', function () {
 //     return view('index');
@@ -75,11 +76,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //The route for submitting a story
     Route::post(uri: '/write', action: [\App\Http\Controllers\StoriesController::class, 'submitStory'])->name('write');
     //The rote for deleting a story
-    Route::post(uri: '/delete', action: [\App\Http\Controllers\StoriesController::class, 'deleteStory'])->name('delete');
+    Route::post(uri: '/delete/{story}', action: [\App\Http\Controllers\StoriesController::class, 'deleteStory'])->name('delete');
     //The route for subscribing to a user
-    Route::post(uri: '/subscribe', action: [\App\Http\Controllers\UserController::class, 'subscribeToUser'])->name('subscribe');
+    Route::post(uri: '/subscribe', action: [\App\Services\SubscriptionService::class, 'subscribeToUser'])->name('subscribe');
     //The route for unsubscribing from a user
-    Route::delete(uri: '/unsubscribe', action: [\App\Http\Controllers\UserController::class, 'unsubscribeFromUser'])->name('unsubscribe');
+    Route::delete(uri: '/unsubscribe', action: [\App\Services\SubscriptionService::class, 'unsubscribeFromUser'])->name('unsubscribe');
 });
 
 //Route to verification reminder and verification email resend form

@@ -1,7 +1,15 @@
 <x-Header />
 <x-navbar />
 <h1>Profile page for {{ $user->name }}</h1>
-
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <hr>
 @if (Auth::id() != $user->id && $isSubscribed == false)
     <div>
@@ -19,7 +27,7 @@
         @method('DELETE')
         <input type="hidden" value="{{ $user->id }}" name="id">
         <button type="submit">Unsubscribe</button>
-
+    </form>
 @endif
 
     <!--Validation errors-->
@@ -44,9 +52,9 @@
             </li>
             @if (Auth::id() == $user->id)
                 <li>
-                    <form action="{{ route('delete') }}" method="POST" onsubmit="return confirm('Do you really want to delete this story?')">
+                    <form action="{{ route('delete', ['story' => $story->id]) }}" method="POST" onsubmit="return confirm('Do you really want to delete this story?')">
                         @csrf
-                        <input type="hidden" value="{{ $story->id }}" name="id">
+                        {{-- <input type="hidden" value="{{ $story->id }}" name="story"> --}}
                         <button>Delete {{ $story->title }}</button>
                     </form>
                 </li>

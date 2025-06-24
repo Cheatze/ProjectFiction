@@ -12,6 +12,7 @@ use App\Enums\Genre;
 use Illuminate\Validation\Rules\Enum;
 use App\Http\Requests\SubmitStoryRequest;
 use App\Http\Requests\SearchRequest;
+use App\Http\Requests\DeleteRequest;
 
 class StoriesController extends Controller
 {
@@ -78,7 +79,7 @@ class StoriesController extends Controller
     public function showStory($id)
     {
         //Could possibly be replaced with type casting but I don't yet see how
-        $story = Story::with('user')->where('id', $id)->first();
+        $story = Story::where('id', $id)->first();
 
         return view('read')->with('story', $story);
     }
@@ -121,13 +122,12 @@ class StoriesController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function deleteStory(Request $request)
+    public function deleteStory(DeleteRequest $request, Story $story)
     {
-        //Nog een plek waar ik niet zie hoe model binding zou kunnen werken
-        $story = Story::where('user_id', Auth::id())
-            ->where('id', $request->input('id'))
-            ->first()
-            ->delete();
+        // dd($request->user());
+        // $request->user()->can('delete', $story);
+        //dd($story);
+        $story->delete();
 
         return back();
     }

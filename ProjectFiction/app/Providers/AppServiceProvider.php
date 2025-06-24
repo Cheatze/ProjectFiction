@@ -24,8 +24,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
-
-
-        Route::model('story', Story::with('user'));
     }
 }

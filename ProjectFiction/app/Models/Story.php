@@ -26,6 +26,13 @@ class Story extends Model
         'user_id', // Make sure user_id is mass assignable
     ];
 
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['user'];
+
 
     /**
      * Scope a query to select orderBy and paginate
@@ -34,18 +41,16 @@ class Story extends Model
      */
     protected function scopeselectOrderPaginate(Builder $query): void
     {
-        $query->with('user')
-            ->select('id', 'title', 'genre', 'synopsis', 'user_id')
+        $query->select('id', 'title', 'genre', 'synopsis', 'user_id')
             ->orderBy('id', 'desc');
     }
 
-        /**
+    /**
      * Scope a query to include stories with their authors and basic fields.
      */
     public function scopeWithAuthor(Builder $query): void
     {
-        $query->with('user')
-            ->select('id', 'title', 'genre', 'synopsis', 'user_id')
+        $query->select('id', 'title', 'genre', 'synopsis', 'user_id')
             ->orderBy('id', 'desc');
     }
 
