@@ -25,7 +25,7 @@ class UserController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(15);
 
-        $isSubscribed = false;
+        //$isSubscribed = false;
         $isSubscribed = $currentUser->can('isSubscribed', $user);
         //
         // if ($currentUser && $currentUser->id !== $id) {

@@ -5,6 +5,8 @@ namespace App\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Http\Requests\SubscribeRequest;
+use App\Http\Requests\UnsubscribeRequest;
 
 class SubscriptionService
 {
@@ -16,29 +18,32 @@ class SubscriptionService
         //
     }
 
-    public function subscribeToUser(Request $request)
+    public function subscribeToUser(SubscribeRequest $request)
     {
         $subscriberId = Auth::id();
+        $subscriber = User::find($subscriberId);
         $subscribedToId = $request->input('id');
 
-        // Ensure the user is not trying to subscribe to themselves
-        if ($subscriberId == $subscribedToId) {
-            return back()->with('error', 'You cannot subscribe to yourself.');
-        }
+        //del
+        // // Ensure the user is not trying to subscribe to themselves
+        // if ($subscriberId == $subscribedToId) {
+        //     return back()->with('error', 'You cannot subscribe to yourself.');
+        // }
 
-        // Get the current authenticated user
-        $subscriber = User::find($subscriberId);
+        // // Get the current authenticated user
+        // $subscriber = User::find($subscriberId);
 
-        if (!$subscriber) {
-            // This should ideally not happen if Auth::id() returns a valid ID
-            return back()->with('error', 'Subscriber not found.');
-        }
+        // if (!$subscriber) {
+        //     // This should ideally not happen if Auth::id() returns a valid ID
+        //     return back()->with('error', 'Subscriber not found.');
+        // }
 
-        // Check if the user being subscribed to exists
-        $subscribedToUser = User::find($subscribedToId);
-        if (!$subscribedToUser) {
-            return back()->with('error', 'User to subscribe to not found.');
-        }
+        // // Check if the user being subscribed to exists
+        // $subscribedToUser = User::find($subscribedToId);
+        // if (!$subscribedToUser) {
+        //     return back()->with('error', 'User to subscribe to not found.');
+        // }
+        //del
 
         try {
             // Attach the subscription
