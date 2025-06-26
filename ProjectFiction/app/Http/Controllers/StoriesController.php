@@ -92,11 +92,11 @@ class StoriesController extends Controller
     {
         $validator = $request->validated();
 
-        if ($validator->fails()) {
-            return back()
-                ->withErrors($validator)
-                ->withInput(); // Return with errors and old input
-        }
+        // if ($validator->fails()) {
+        //     return back()
+        //         ->withErrors($validator)
+        //         ->withInput(); // Return with errors and old input
+        // }
 
         // Get the currently authenticated user
         $user = Auth::user();

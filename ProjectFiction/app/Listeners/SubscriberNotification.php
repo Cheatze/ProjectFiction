@@ -36,14 +36,17 @@ class SubscriberNotification implements ShouldQueue
 
         // Check if the author exists and has subscribers
         if ($author) {
+
+            $author->subscribers->each(fn($subscriber) => $subscriber->notify(new NewStoryNotification($story)));
+
             // Get all users who are subscribed to this author
             // $author->subscribers() is the relationship defined in the User model
-            $subscribers = $author->subscribers; // This returns a collection of User models
+            // $subscribers = $author->subscribers; // This returns a collection of User models
 
-            foreach ($subscribers as $subscriber) {
-                // Send the notification to each subscriber
-                $subscriber->notify(new NewStoryNotification($story));
-            }
+            // foreach ($subscribers as $subscriber) {
+            //     Send the notification to each subscriber
+            //     $subscriber->notify(new NewStoryNotification($story));
+            // }
         }
     }
 }
