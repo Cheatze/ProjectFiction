@@ -12,9 +12,9 @@
 <div class="container">
     <div class="row">
 
-        @foreach (\App\Enums\Genre::cases() as $index => $status)
+        @foreach (\App\Enums\Genre::cases() as $index => $genre)
             <div class="col-sm">
-                <a href="{{ route('stories.genre', ['genre' => $status->value]) }}">{{ $status->value }}</a>
+                <a href="{{ route('stories.genre', ['genre' => $genre->value]) }}">{{ $genre->value }}</a>
             </div>
 
             @if (($index + 1) === 7) {{-- Check if it's the 7th iteration (index starts at 0) --}}

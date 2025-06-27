@@ -18,20 +18,9 @@
         <label for="genre" class="form-label">Genre</label>
         <select class="form-select" id="genre" name="genre" required>
             <option value="">Select a Genre</option>
-            <option value="Action">Action</option>
-            <option value="Essay">Essay</option>
-            <option value="Fiction">Fiction</option>
-            <option value="Fantasy">Fantasy</option>
-            <option value="Mystery">Mystery</option>
-            <option value="Science Fiction">Science Fiction</option>
-            <option value="Horror">Horror</option>
-            <option value="Historical">Historical</option>
-            <option value="Humor">Humor</option>
-            <option value="Thriller">Thriller</option>
-            <option value="Mythology">Mythology</option>
-            <option value="Romance">romance</option>
-            <option value="Biography">Biography</option>
-            <option value="Supernatural">Supernatural</option>
+            @foreach (\App\Enums\Genre::cases() as $index => $genre)
+                <option value="{{ $genre->value }}">{{ $genre->value }}</option>
+            @endforeach
         </select>
     </div>
 
