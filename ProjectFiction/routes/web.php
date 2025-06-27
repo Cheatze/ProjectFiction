@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use App\Enums\Genre;
+use App\Http\Middleware\EnsureUserOwnsProfile;
+
 //use App\Services\SubscriptionService;
 
 // Route::get('/', function () {
@@ -40,8 +42,11 @@ Route::get('/story/{id}', [\App\Http\Controllers\StoriesController::class, 'show
  */
 Route::get('/profile/{user}', [\App\Http\Controllers\UserController::class, 'showProfile'])->name('profile.show');
 
-//middleware and route for privateProfile.show
-Route::middleware('auth', '')->group(function () {
+/**
+ * Route to the private profile 
+ * With custom middleware to make sure the user can only reach their own
+ */
+Route::middleware(['auth', EnsureUserOwnsProfile::class])->group(function () {
     Route::get('/privateprofile/{user}', [\App\Http\Controllers\UserController::class, 'showPrivateProfile'])->name('privateprofile.show');
 });
 
