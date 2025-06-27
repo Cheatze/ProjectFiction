@@ -10,6 +10,19 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    public function showPrivateProfile(User $user)
+    {
+
+        $list = $user->stories() // Access the relationship
+            ->select('id', 'title', 'genre', 'synopsis')
+            ->orderBy('id', 'desc')
+            ->paginate(15);
+
+        return view('privateProfile')
+            ->with('user', $user)
+            ->with('stories', $list);
+    }
+
     public function showProfile(User $user)
     {
         //check if Auth::id() is subscribed to this user

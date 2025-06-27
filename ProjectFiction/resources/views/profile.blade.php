@@ -1,6 +1,6 @@
 <x-Header />
 <x-navbar />
-<h1>Profile page for {{ $user->name }}</h1>
+<h1>Public profile page for {{ $user->name }}</h1>
 @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
@@ -49,15 +49,6 @@
             <li>
                 <p>{{ $story->synopsis }}</p>
             </li>
-            @if (Auth::id() == $user->id)
-                <li>
-                    <form action="{{ route('delete', ['story' => $story->id]) }}" method="POST" onsubmit="return confirm('Do you really want to delete this story?')">
-                        @csrf
-                        {{-- <input type="hidden" value="{{ $story->id }}" name="story"> --}}
-                        <button>Delete {{ $story->title }}</button>
-                    </form>
-                </li>
-            @endif
             <hr>
         </div>
     @endforeach

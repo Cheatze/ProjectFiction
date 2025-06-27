@@ -46,6 +46,14 @@ class Story extends Model
     }
 
     /**
+     * Returns the user name
+     */
+    public function userName()
+    {
+        return $this->user->name;
+    }
+
+    /**
      * Scope a query to include stories with their authors and basic fields.
      */
     public function scopeWithAuthor(Builder $query): void

@@ -35,8 +35,15 @@ Route::get(uri: '/search', action: [\App\Http\Controllers\StoriesController::cla
  */
 Route::get('/story/{id}', [\App\Http\Controllers\StoriesController::class, 'showStory'])->name('stories.read');
 
-//Make a UserController?
+/**
+ * Route to public profile
+ */
 Route::get('/profile/{user}', [\App\Http\Controllers\UserController::class, 'showProfile'])->name('profile.show');
+
+//middleware and route for privateProfile.show
+Route::middleware('auth', '')->group(function () {
+    Route::get('/privateprofile/{user}', [\App\Http\Controllers\UserController::class, 'showPrivateProfile'])->name('privateprofile.show');
+});
 
 /**
  * Route for the link in a verification email
