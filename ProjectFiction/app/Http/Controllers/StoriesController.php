@@ -13,6 +13,7 @@ use Illuminate\Validation\Rules\Enum;
 use App\Http\Requests\SubmitStoryRequest;
 use App\Http\Requests\SearchRequest;
 use App\Http\Requests\DeleteRequest;
+use Stevebauman\Purify\Facades\Purify;
 
 class StoriesController extends Controller
 {
@@ -81,6 +82,9 @@ class StoriesController extends Controller
         //Could possibly be replaced with type casting but I don't yet see how
         $story = Story::where('id', $id)->first();
 
+        $story->content = Purify::clean($story->content);
+
+
         return view('read')->with('story', $story);
     }
 
@@ -106,7 +110,8 @@ class StoriesController extends Controller
         $story->title = $request->input('title');
         $story->synopsis = $request->input('synopsis');
         $story->genre = $request->input('genre');
-        $story->content = $request->input('story');
+        //$story->content = $request->input('story');
+        $story->content = Purify::clean($request->input('story'));
         $story->user_id = $user->id; // Assign the current user's ID
         $story->save();
 
