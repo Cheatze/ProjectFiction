@@ -6,36 +6,36 @@ use Illuminate\Http\Request;
 use App\Enums\Genre;
 use App\Http\Middleware\EnsureUserOwnsProfile;
 
+//Controllers for grouping
+use App\Http\Controllers\StoriesController;
+// use App\Http\Controllers\UserController;
+// use App\Http\Controllers\AuthController;
+
 //use App\Services\SubscriptionService;
 
 // Route::get('/', function () {
 //     return view('index');
 // })->name("index");
 
+// Routes that use the StoriesController
+Route::controller(StoriesController::class)->group(function () {
+    //Paginated stories from new to old
+    Route::get('/browse', 'showNew')->name('show.newest');
+    // Paginated stories from new to old by genre
+    Route::get('/stories/{genre}', 'showGenre')->name('stories.genre');
+    //Route for the search bar
+    Route::get('/search', 'showSearch')->name('show.search');
+    //Shows the read page for the story with a certain id
+    Route::get('/story/{id}', 'showStory')->name('stories.read');
+
+});
+
+
 /**
  * Shows the main/index page
  */
 Route::get(uri: '/', action: [\App\Http\Controllers\MainController::class, 'index'])->name('index');
 
-/**
- * Shows the pagination of stories from new to old
- */
-Route::get(uri: '/browse', action: [\App\Http\Controllers\StoriesController::class, 'showNew'])->name('show.newest');
-
-/**
- * Shows the pagination of stories from new to old by genre
- */
-Route::get('/stories/{genre}', [\App\Http\Controllers\StoriesController::class, 'showGenre'])->name('stories.genre');
-
-/**
- * Route for the search bar
- */
-Route::get(uri: '/search', action: [\App\Http\Controllers\StoriesController::class, 'showSearch'])->name('show.search');
-
-/**
- * Shows the read page for the story with a certain id
- */
-Route::get('/story/{id}', [\App\Http\Controllers\StoriesController::class, 'showStory'])->name('stories.read');
 
 /**
  * Route to public profile
@@ -107,7 +107,7 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-
+//
 Route::get('/user/{id}', function (string $id) {
     return 'User ' . $id;
 });
