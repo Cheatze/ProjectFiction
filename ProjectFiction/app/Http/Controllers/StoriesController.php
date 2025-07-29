@@ -14,17 +14,15 @@ use App\Http\Requests\SubmitStoryRequest;
 use App\Http\Requests\SearchRequest;
 use App\Http\Requests\DeleteRequest;
 use Stevebauman\Purify\Facades\Purify;
+use Illuminate\Support\Facades\Log;
 
 class StoriesController extends Controller
 {
     public function showWrite()
     {
+        Log::channel('stories')->info('User accessed the write story page', ['user_id' => Auth::id()]);
         return view('write');
     }
-
-    //paginate,orderBy,select
-
-
 
     /**
      * 
@@ -34,6 +32,8 @@ class StoriesController extends Controller
     public function showNew()
     {
         $list = Story::withAuthor()->paginate(15);
+
+        Log::channel('stories')->info('Showing new stories', ['count' => $list->count()]);
 
         return view('browse')->with('stories', $list);
     }
@@ -52,6 +52,8 @@ class StoriesController extends Controller
             ->where('genre', $theGenre)
             ->paginate(15);
 
+        log::channel('stories')->info('Showing stories by genre', ['genre' => $theGenre, 'count' => $list->count()]);
+
         return view('browse')->with('stories', $list);
     }
 
@@ -60,14 +62,14 @@ class StoriesController extends Controller
         //$validator = $request->validated();
         $searchTerm = $request->input('search');
 
-        // $request->validate([
-        //     'search' => 'required|string|min:1', // Require at least 1 character
-        // ]);
+        log::channel('stories')->info('User searched for stories', ['search_term' => $searchTerm]);
 
         $list = Story::withAuthor() // Start a new query builder instance for the Story model
             ->where('title', 'LIKE', '%' . $searchTerm . '%')
             ->orWhere('synopsis', 'LIKE', '%' . $searchTerm . '%')
             ->paginate(15);
+
+        log::channel('stories')->info('Search results count', ['count' => $list->count()]);
 
         return view('browse')->with('stories', $list);
     }
@@ -79,11 +81,16 @@ class StoriesController extends Controller
      */
     public function showStory($id)
     {
+        log::channel('stories')->info('User accessed story reading page', ['story_id' => $id]);
+
         //Could possibly be replaced with type casting but I don't yet see how
         $story = Story::where('id', $id)->first();
 
+        log::channel('stories')->info('Story content retrieved', ['story_id' => $id]);
+
         $story->content = Purify::clean($story->content);
 
+        log::channel('stories')->info('Story HTML purified', ['story_id' => $id]);
 
         return view('read')->with('story', $story);
     }
@@ -94,13 +101,12 @@ class StoriesController extends Controller
      */
     public function submitStory(SubmitStoryRequest $request)
     {
-        $validator = $request->validated();
-
-        // if ($validator->fails()) {
-        //     return back()
-        //         ->withErrors($validator)
-        //         ->withInput(); // Return with errors and old input
-        // }
+        log::channel('stories')->info('Story content submitted', [
+            'user_id' => Auth::id(),
+            'title' => $request->input('title'),
+            'synopsis' => $request->input('synopsis'),
+            'genre' => $request->input('genre'),
+        ]);
 
         // Get the currently authenticated user
         $user = Auth::user();
@@ -115,8 +121,12 @@ class StoriesController extends Controller
         $story->user_id = $user->id; // Assign the current user's ID
         $story->save();
 
+        log::channel('stories')->info('Story saved to database', ['story_id' => $story->id, 'user_id' => $user->id]);
+
         //Has access to the story id if things are right
         event(new StoryPosted($story));
+
+        log::channel('stories')->info('Story posted event dispatched', ['story_id' => $story->id, 'user_id' => $user->id]);
 
         // Redirect to a success page or display a success message
         return redirect()->route('index')->with('success', 'Story submitted successfully!');
@@ -129,10 +139,11 @@ class StoriesController extends Controller
      */
     public function deleteStory(DeleteRequest $request, Story $story)
     {
-        // dd($request->user());
-        // $request->user()->can('delete', $story);
-        //dd($story);
+        log::channel('stories')->info('User requested story deletion', ['story_id' => $story->id, 'user_id' => Auth::id()]);
+
         $story->delete();
+
+        log::channel('stories')->info('Story deleted from database', ['story_id' => $story->id, 'user_id' => Auth::id()]);
 
         return back();
     }
