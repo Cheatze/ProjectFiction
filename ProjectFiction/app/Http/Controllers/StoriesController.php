@@ -146,7 +146,8 @@ class StoriesController extends Controller
     {
         log::channel('stories')->info('User requested story deletion', ['story_id' => $story->id, 'user_id' => Auth::id()]);
 
-        $story->delete();
+        //Force delete removes the story from the database completly instead of soft deleting it
+        $story->forceDelete();
 
         log::channel('stories')->info('Story deleted from database', ['story_id' => $story->id, 'user_id' => Auth::id()]);
 

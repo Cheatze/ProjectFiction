@@ -229,4 +229,29 @@ class StoriesControllerTest extends TestCase
         ]);
     }
 
+    /** @test */
+    public function authenticated_user_can_delete_their_own_story()
+    {
+        $this->actingAs($this->verifiedUser); //
+        $story = Story::factory()->create(['user_id' => $this->verifiedUser->id]); //
+
+        $response = $this->post(route('delete', ['story' => $story->id]));
+
+        $response->assertRedirect(); // Typically redirects back
+        $this->assertDatabaseMissing('stories', ['id' => $story->id]);
+    }
+
+    /** @test */
+    public function authenticated_user_cannot_delete_another_users_story()
+    {
+        $user2 = User::factory()->create(); // This user will be verified by default
+        $this->actingAs($this->verifiedUser); //
+        $storyOfUser2 = Story::factory()->create(['user_id' => $user2->id]); //
+
+        $response = $this->post(route('delete', ['story' => $storyOfUser2->id]));
+
+        $response->assertForbidden(); // Assumes a 403 Forbidden due to policy
+        $this->assertDatabaseHas('stories', ['id' => $storyOfUser2->id]);
+    }
+
 }
