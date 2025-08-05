@@ -254,4 +254,26 @@ class StoriesControllerTest extends TestCase
         $this->assertDatabaseHas('stories', ['id' => $storyOfUser2->id]);
     }
 
+    /** @test */
+    public function guest_cannot_delete_a_story()
+    {
+        $story = Story::factory()->create();
+
+        $response = $this->post(route('delete', ['story' => $story->id]));
+
+        $response->assertRedirect('/login'); // Redirects to login
+        $this->assertDatabaseHas('stories', ['id' => $story->id]);
+    }
+
+    /** @test */
+    public function unverified_user_cannot_delete_a_story()
+    {
+        $this->actingAs($this->unverifiedUser); //
+        $story = Story::factory()->create(['user_id' => $this->unverifiedUser->id]); //
+
+        $response = $this->post(route('delete', ['story' => $story->id]));
+        $response->assertRedirect(route('verification.notice'));
+        $this->assertDatabaseHas('stories', ['id' => $story->id]);
+    }
+
 }
