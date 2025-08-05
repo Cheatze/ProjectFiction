@@ -86,6 +86,11 @@ class StoriesController extends Controller
         //Could possibly be replaced with type casting but I don't yet see how
         $story = Story::where('id', $id)->first();
 
+        if (!$story) {
+            log::channel('stories')->error('Story not found', ['story_id' => $id]);
+            abort(404); // Or handle the error as needed
+        }
+
         log::channel('stories')->info('Story content retrieved', ['story_id' => $id]);
 
         $story->content = Purify::clean($story->content);
