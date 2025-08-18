@@ -23,6 +23,9 @@ return new class extends Migration {
             $table->string('genre');
             $table->mediumText('content'); // For the rich text content
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key to users table
+            $table->integer('views')->default(0);
+            $table->integer('likes')->default(0);
+            $table->integer('score')->default(0);
             $table->softDeletes(); // Adds the deleted_at column
             $table->timestamps();
         });

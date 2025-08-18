@@ -71,11 +71,6 @@ class AuthController extends Controller
      */
     public function resetPassword(ResetPasswordRequest $request)
     {
-        // $request->validate([
-        //     'token' => 'required',
-        //     'email' => 'required|email',
-        //     'password' => 'required|min:8|confirmed',
-        // ]);
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
@@ -114,10 +109,6 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        // $validated = $request->validate([
-        //     'email' => 'required|email',
-        //     'password' => 'required|string'
-        // ]);
 
         $validated = $request->validated();
 

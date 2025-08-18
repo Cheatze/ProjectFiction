@@ -39,6 +39,8 @@ class UserController extends Controller
      */
     public function showProfile(User $user)
     {
+        log::channel('users')->info('User accessed public profile', ['user_id' => $user->id]);
+
         //check if Auth::id() is subscribed to this user
 
         //$user = User::where('id', $id)->first();
@@ -52,15 +54,11 @@ class UserController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(15);
 
-        //$isSubscribed = false;
+        log::channel('users')->info('Showing public profile stories list', ['user_id' => $user->id, 'count' => $list->count()]);
+
         $isSubscribed = $currentUser->can('isSubscribed', $user);
-        //
-        // if ($currentUser && $currentUser->id !== $id) {
-        //     // Check if the current user is subscribed to the profile owner
-        //     $isSubscribed = $currentUser->subscribedTo() //Ignore the red, this works
-        //         ->where('subscribed_to_id', $id)
-        //         ->exists();
-        // }
+
+        log::channel('users')->info('Checking subscription status', ['user_id' => $currentUser->id, 'subscribed_to' => $user->id, 'is_subscribed' => $isSubscribed]);
 
         return view('profile')
             ->with('user', $user)
