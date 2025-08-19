@@ -56,9 +56,12 @@ class UserController extends Controller
 
         log::channel('users')->info('Showing public profile stories list', ['user_id' => $user->id, 'count' => $list->count()]);
 
-        $isSubscribed = $currentUser->can('isSubscribed', $user);
-
-        log::channel('users')->info('Checking subscription status', ['user_id' => $currentUser->id, 'subscribed_to' => $user->id, 'is_subscribed' => $isSubscribed]);
+        if ($currentUser !== null) {
+            $isSubscribed = $currentUser->can('isSubscribed', $user);
+            log::channel('users')->info('Checking subscription status', ['user_id' => $currentUser->id, 'subscribed_to' => $user->id, 'is_subscribed' => $isSubscribed]);
+        } else {
+            $isSubscribed = false; // If not authenticated, they cannot be subscribed
+        }
 
         return view('profile')
             ->with('user', $user)

@@ -21,6 +21,8 @@ use App\Http\Controllers\StoriesController;
 Route::controller(StoriesController::class)->group(function () {
     //Paginated stories from new to old
     Route::get('/browse', 'showNew')->name('show.newest');
+    //Paginated stories by score
+    Route::get('/popular', 'showPopular')->name('show.popular');
     // Paginated stories from new to old by genre
     Route::get('/stories/{genre}', 'showGenre')->name('stories.genre');
     //Route for the search bar

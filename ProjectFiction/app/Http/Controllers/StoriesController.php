@@ -15,6 +15,7 @@ use App\Http\Requests\SearchRequest;
 use App\Http\Requests\DeleteRequest;
 use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class StoriesController extends Controller
 {
@@ -34,6 +35,20 @@ class StoriesController extends Controller
         $list = Story::withAuthor()->paginate(15);
 
         Log::channel('stories')->info('Showing new stories', ['count' => $list->count()]);
+
+        return view('browse')->with('stories', $list);
+    }
+
+    /**
+     * 
+     * Shows a paginated list of stories ordered by score
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function showPopular()
+    {
+        $list = Story::Popular()->paginate(15);
+
+        Log::channel('stories')->info('Showing popular stories', ['count' => $list->count()]);
 
         return view('browse')->with('stories', $list);
     }
@@ -92,6 +107,27 @@ class StoriesController extends Controller
         }
 
         log::channel('stories')->info('Story content retrieved', ['story_id' => $id]);
+
+        // Check if the story has already been viewed in this session
+        $sessionKey = 'story_viewed_' . $story->id;
+
+        if (!Session::has($sessionKey)) {
+            // Log the view and score increment
+            Log::channel('stories')->info('Incrementing views and score', ['story_id' => $id]);
+
+            // Increment the views and score
+            $story->increment('views');
+            $story->increment('score');
+
+            // Set the session flag
+            Session::put($sessionKey, true);
+
+            // Log the successful increment
+            Log::channel('stories')->info('Views and score updated successfully', ['story_id' => $id, 'new_views' => $story->views, 'new_score' => $story->score]);
+        } else {
+            // Log that the story has already been viewed this session
+            Log::channel('stories')->info('Story already viewed this session', ['story_id' => $id]);
+        }
 
         $story->content = Purify::clean($story->content);
 

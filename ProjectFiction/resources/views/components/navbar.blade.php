@@ -12,6 +12,7 @@
                     <a class="nav-link" href="{{ route("show.write") }}">Write</a>
                     @endAuth
                     <a class="nav-link" href="{{ route("show.newest") }}">Newest</a>
+                    <a class="nav-link" href="{{ route("show.popular") }}">Popular</a>
                     <form action="{{ route('show.search') }}" method="get" class="d-flex">
                         <input name="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>

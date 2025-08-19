@@ -63,6 +63,15 @@ class Story extends Model
     }
 
     /**
+     * Scope a query to select stories ordered by their score.
+     */
+    public function scopePopular(Builder $query): void
+    {
+        $query->select('id', 'title', 'genre', 'synopsis', 'user_id', 'score')
+            ->orderBy('score', 'desc');
+    }
+
+    /**
      * Get the user that wrote the story.
      */
     public function user(): BelongsTo

@@ -11,23 +11,25 @@
     </div>
 @endif
 <hr>
-@if (Auth::id() != $user->id && $isSubscribed == false)
-    <div>
-        <form action="{{ route('subscribe') }}" method="POST">
+@auth
+    @if (Auth::id() != $user->id && $isSubscribed == false)
+        <div>
+            <form action="{{ route('subscribe') }}" method="POST">
+                @csrf
+                <input type="hidden" value="{{ $user->id }}" name="id">
+                <button>Subscribe to {{ $user->name }}</button>
+            </form>
+        </div>
+        <br>
+    @elseif (Auth::id() != $user->id)
+        <form action="{{ route('unsubscribe') }}" method="POST">
             @csrf
+            @method('DELETE')
             <input type="hidden" value="{{ $user->id }}" name="id">
-            <button>Subscribe to {{ $user->name }}</button>
+            <button type="submit">Unsubscribe</button>
         </form>
-    </div>
-    <br>
-@elseif (Auth::id() != $user->id)
-    <form action="{{ route('unsubscribe') }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <input type="hidden" value="{{ $user->id }}" name="id">
-        <button type="submit">Unsubscribe</button>
-    </form>
-@endif
+    @endif
+@endauth
 
     <!--Validation errors-->
     {{-- @if ($error->any())
