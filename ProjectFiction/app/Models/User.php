@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 //use Illuminate\Contracts\Auth\CanResetPassword;
 
@@ -54,6 +55,16 @@ class User extends Authenticatable implements MustVerifyEmail//, CanResetPasswor
     public function stories()
     {
         return $this->hasMany(Story::class);
+    }
+
+    /**
+     * One user can like many stories.
+     * A story can be liked by many users.
+     * @return BelongsToMany<Story, User, \Illuminate\Database\Eloquent\Relations\Pivot>
+     */
+    public function likedStories(): BelongsToMany
+    {
+        return $this->belongsToMany(Story::class, 'likes');
     }
 
     /**

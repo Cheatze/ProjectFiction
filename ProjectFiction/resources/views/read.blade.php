@@ -11,5 +11,13 @@
 <p>{!! $story->content !!}</p>
 </div>
 
+@auth
+    <div class="px-5">
+        <form action="{{ route('stories.like', ['story' => $story->id]) }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-primary">Like this story</button>
+        </form>
+    </div>
+@endauth
 
 <x-Footer />

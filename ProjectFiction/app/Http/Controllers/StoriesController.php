@@ -98,7 +98,7 @@ class StoriesController extends Controller
     {
         log::channel('stories')->info('User accessed story reading page', ['story_id' => $id]);
 
-        //Could possibly be replaced with type casting but I don't yet see how
+        //Could possibly be replaced with type casting but I get errors when I try
         $story = Story::where('id', $id)->first();
 
         if (!$story) {
@@ -130,8 +130,9 @@ class StoriesController extends Controller
         }
 
         $story->content = Purify::clean($story->content);
+        //$story->id = (int) $story->id; // Ensure the ID is an integer for consistency
 
-        log::channel('stories')->info('Story HTML purified', ['story_id' => $id]);
+        log::channel('stories')->info('Story HTML purified', ['story_id' => $story->id]);
 
         return view('read')->with('story', $story);
     }

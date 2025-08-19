@@ -95,6 +95,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post(uri: '/subscribe', action: [\App\Services\SubscriptionService::class, 'subscribeToUser'])->name('subscribe');
     //The route for unsubscribing from a user
     Route::delete(uri: '/unsubscribe', action: [\App\Services\SubscriptionService::class, 'unsubscribeFromUser'])->name('unsubscribe');
+    //The route for liking a story
+    Route::post('/stories/like/{story}', [\App\Http\Controllers\LikesController::class, 'like'])->name('stories.like');
 });
 
 //Route to verification reminder and verification email resend form

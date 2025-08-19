@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Story extends Model
 {
@@ -78,4 +79,15 @@ class Story extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get the likers of the story.
+     * A story can be liked by many users.
+     * @return BelongsToMany<User, Story, \Illuminate\Database\Eloquent\Relations\Pivot>
+     */
+    public function likers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'likes');
+    }
+
 }
