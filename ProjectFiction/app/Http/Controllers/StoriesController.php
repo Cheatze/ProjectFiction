@@ -129,12 +129,20 @@ class StoriesController extends Controller
             Log::channel('stories')->info('Story already viewed this session', ['story_id' => $id]);
         }
 
+        // Check if a user is authenticated
+        $currentUser = Auth::user();
+        if ($currentUser !== null) {
+            // Check if the authenticated user has liked this specific story
+            $hasLiked = $story->likers()->where('user_id', $currentUser->id)->exists();
+        } else {
+            $hasLiked = false;
+        }
+
         $story->content = Purify::clean($story->content);
-        //$story->id = (int) $story->id; // Ensure the ID is an integer for consistency
 
         log::channel('stories')->info('Story HTML purified', ['story_id' => $story->id]);
 
-        return view('read')->with('story', $story);
+        return view('read')->with('story', $story)->with('hasLiked', $hasLiked);
     }
 
     /**

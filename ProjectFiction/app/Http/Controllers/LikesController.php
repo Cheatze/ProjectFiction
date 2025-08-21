@@ -30,4 +30,26 @@ class LikesController extends Controller
 
         return redirect()->back()->with('success', 'Story liked successfully!');
     }
+
+    /**
+     * Unlike a story.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function unlike(Story $story)
+    {
+        // Check if the authenticated user has liked the story
+        if (!$story->likers()->where('user_id', Auth::user()->id)->exists()) {
+            return back()->with('error', 'You have not liked this story yet.');
+        }
+        // Detach the user from the story's 'likers' relationship
+        $story->likers()->detach(Auth::user()->id);
+
+        // Decrement the 'likes' field on the story
+        $story->decrement('likes');
+        $story->decrement('score', 10); // Decrement score by 10 for each unlike
+
+        return redirect()->back()->with('success', 'Story unliked successfully!');
+    }
 }

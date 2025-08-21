@@ -12,12 +12,22 @@
 </div>
 
 @auth
-    <div class="px-5">
-        <form action="{{ route('stories.like', ['story' => $story->id]) }}" method="POST">
-            @csrf
-            <button type="submit" class="btn btn-primary">Like this story</button>
-        </form>
-    </div>
+    @if ($hasLiked == false)
+        <div class="px-5">
+            <form action="{{ route('stories.like', ['story' => $story->id]) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-primary">Like this story</button>
+            </form>
+        </div>
+    @elseif ($hasLiked == true)
+        <div class="px-5">
+            <form action="{{ route('stories.dislike', ['story' => $story->id]) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-secondary">Unlike this story</button>
+            </form>
+        </div>
+    @endif
+
 @endauth
 
 <x-Footer />
