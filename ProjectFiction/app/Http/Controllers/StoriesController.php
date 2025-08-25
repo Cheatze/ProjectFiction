@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Events\StoryPosted;
+use App\Events\StoryViewed;
 use App\Enums\Genre;
 use Illuminate\Validation\Rules\Enum;
 use App\Http\Requests\SubmitStoryRequest;
@@ -108,32 +109,35 @@ class StoriesController extends Controller
 
         log::channel('stories')->info('Story content retrieved', ['story_id' => $id]);
 
+        event(new StoryViewed($story));
+
         // Check if the story has already been viewed in this session
-        $sessionKey = 'story_viewed_' . $story->id;
+        // $sessionKey = 'story_viewed_' . $story->id;
 
-        if (!Session::has($sessionKey)) {
-            // Log the view and score increment
-            Log::channel('stories')->info('Incrementing views and score', ['story_id' => $id]);
+        // if (!Session::has($sessionKey)) {
+        //     // Log the view and score increment
+        //     Log::channel('stories')->info('Incrementing views and score', ['story_id' => $id]);
 
-            // Increment the views and score
-            $story->increment('views');
-            $story->increment('score');
+        //     // Increment the views and score
+        //     $story->increment('views');
+        //     $story->increment('score');
 
-            // Set the session flag
-            Session::put($sessionKey, true);
+        //     // Set the session flag
+        //     Session::put($sessionKey, true);
 
-            // Log the successful increment
-            Log::channel('stories')->info('Views and score updated successfully', ['story_id' => $id, 'new_views' => $story->views, 'new_score' => $story->score]);
-        } else {
-            // Log that the story has already been viewed this session
-            Log::channel('stories')->info('Story already viewed this session', ['story_id' => $id]);
-        }
+        //     // Log the successful increment
+        //     Log::channel('stories')->info('Views and score updated successfully', ['story_id' => $id, 'new_views' => $story->views, 'new_score' => $story->score]);
+        // } else {
+        //     // Log that the story has already been viewed this session
+        //     Log::channel('stories')->info('Story already viewed this session', ['story_id' => $id]);
+        // }
 
         // Check if a user is authenticated
         $currentUser = Auth::user();
         if ($currentUser !== null) {
             // Check if the authenticated user has liked this specific story
             $hasLiked = $story->likers()->where('user_id', $currentUser->id)->exists();
+            Log::channel('stories')->info('User like status checked', ['story_id' => $story->id, 'user_id' => $currentUser->id, 'has_liked' => $hasLiked]);
         } else {
             $hasLiked = false;
         }
