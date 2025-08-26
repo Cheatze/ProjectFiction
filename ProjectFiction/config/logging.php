@@ -87,6 +87,13 @@ return [
             'level' => env('LOG_USERS_LEVEL', 'debug'),
         ],
 
+        //custom channel for user logging
+        'liking' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/liking.log'),
+            'level' => env('LOG_USERS_LEVEL', 'debug'),
+        ],
+
 
         'slack' => [
             'driver' => 'slack',
