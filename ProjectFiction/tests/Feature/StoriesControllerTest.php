@@ -10,6 +10,9 @@ use App\Models\User;
 use App\Enums\Genre;
 use Illuminate\Support\Facades\Event;
 use App\Events\StoryPosted;
+use App\Events\StoryViewed;
+use Illuminate\Support\Facades\Session;
+use PHPUnit\Framework\Attributes\Test;
 
 class StoriesControllerTest extends TestCase
 {
@@ -24,14 +27,22 @@ class StoriesControllerTest extends TestCase
         $this->unverifiedUser = User::factory()->unverified()->create();
     }
 
-    /** @test */
+    /**
+     * Test that guests cannot access the write story page
+     * @return void
+     */
+    #[Test]
     public function guests_cannot_access_write_story_page()
     {
         $response = $this->get(route('show.write'));
         $response->assertRedirect('/login'); // Assuming it redirects to login
     }
 
-    /** @test */
+    /**
+     * Test that authenticated and verified users can access the write story page
+     * @return void
+     */
+    #[Test]
     public function authenticated_and_verified_users_can_access_write_story_page()
     {
         $this->actingAs($this->verifiedUser); //
@@ -41,7 +52,7 @@ class StoriesControllerTest extends TestCase
         $response->assertViewIs('write');
     }
 
-    /** @test */
+    #[Test]
     public function unverified_users_cannot_access_write_story_page()
     {
         $this->actingAs($this->unverifiedUser); //
@@ -50,7 +61,7 @@ class StoriesControllerTest extends TestCase
         $response->assertRedirect(route('verification.notice'));
     }
 
-    /** @test */
+    #[Test]
     public function it_displays_a_paginated_list_of_new_stories()
     {
         Story::factory()->count(20)->create();
@@ -63,7 +74,7 @@ class StoriesControllerTest extends TestCase
         $this->assertCount(15, $response->viewData('stories')); // Default pagination is 15
     }
 
-    /** @test */
+    #[Test]
     public function it_displays_paginated_stories_by_genre()
     {
         Story::factory()->count(5)->create(['genre' => Genre::Fantasy]);
@@ -80,7 +91,7 @@ class StoriesControllerTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_invalid_genre_in_show_genre()
     {
         // Attempt to access a genre that doesn't exist in the enum
@@ -88,7 +99,7 @@ class StoriesControllerTest extends TestCase
         $response->assertNotFound(); // Or whatever error handling Laravel provides for invalid enum routes
     }
 
-    /** @test */
+    #[Test]
     public function it_can_search_stories_by_title()
     {
         Story::factory()->create(['title' => 'The Great Adventure']);
@@ -103,7 +114,7 @@ class StoriesControllerTest extends TestCase
         $this->assertEquals('The Great Adventure', $response->viewData('stories')->first()->title);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_search_stories_by_synopsis()
     {
         Story::factory()->create(['synopsis' => 'A story about a brave knight.']);
@@ -118,14 +129,14 @@ class StoriesControllerTest extends TestCase
         $this->assertEquals('A story about a brave knight.', $response->viewData('stories')->first()->synopsis);
     }
 
-    /** @test */
+    #[Test]
     public function search_requires_a_search_term()
     {
         $response = $this->get(route('show.search', ['search' => '']));
         $response->assertSessionHasErrors('search'); // Assuming SearchRequest validates this
     }
 
-    /** @test */
+    #[Test]
     public function it_displays_a_single_story()
     {
         $story = Story::factory()->create(['content' => '<p>This is <strong>bold</strong> content.</p>']);
@@ -140,14 +151,14 @@ class StoriesControllerTest extends TestCase
         $this->assertEquals('<p>This is <strong>bold</strong> content.</p>', $response->viewData('story')->content);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_404_for_non_existent_story()
     {
         $response = $this->get(route('stories.read', ['id' => 99999]));
         $response->assertNotFound();
     }
 
-    /** @test */
+    #[Test]
     public function authenticated_and_verified_user_can_submit_a_story()
     {
         Event::fake(); // Prevent actual event dispatch during testing
@@ -174,7 +185,7 @@ class StoriesControllerTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function unverified_user_cannot_submit_a_story()
     {
         $this->actingAs($this->unverifiedUser); //
@@ -191,7 +202,7 @@ class StoriesControllerTest extends TestCase
         $this->assertDatabaseMissing('stories', ['title' => 'My New Story']);
     }
 
-    /** @test */
+    #[Test]
     public function submit_story_requires_valid_data()
     {
         $this->actingAs($this->verifiedUser); //
@@ -206,7 +217,7 @@ class StoriesControllerTest extends TestCase
         $response->assertSessionHasErrors(['title', 'synopsis', 'genre', 'story']);
     }
 
-    /** @test */
+    #[Test]
     public function submit_story_purifies_content()
     {
         $this->actingAs($this->verifiedUser); //
@@ -229,7 +240,7 @@ class StoriesControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function authenticated_user_can_delete_their_own_story()
     {
         $this->actingAs($this->verifiedUser); //
@@ -241,7 +252,7 @@ class StoriesControllerTest extends TestCase
         $this->assertDatabaseMissing('stories', ['id' => $story->id]);
     }
 
-    /** @test */
+    #[Test]
     public function authenticated_user_cannot_delete_another_users_story()
     {
         $user2 = User::factory()->create(); // This user will be verified by default
@@ -254,7 +265,7 @@ class StoriesControllerTest extends TestCase
         $this->assertDatabaseHas('stories', ['id' => $storyOfUser2->id]);
     }
 
-    /** @test */
+    #[Test]
     public function guest_cannot_delete_a_story()
     {
         $story = Story::factory()->create();
@@ -265,7 +276,11 @@ class StoriesControllerTest extends TestCase
         $this->assertDatabaseHas('stories', ['id' => $story->id]);
     }
 
-    /** @test */
+    /**
+     * Test that unverified users cannot delete a story
+     * @return void
+     */
+    #[Test]
     public function unverified_user_cannot_delete_a_story()
     {
         $this->actingAs($this->unverifiedUser); //
@@ -274,6 +289,56 @@ class StoriesControllerTest extends TestCase
         $response = $this->post(route('delete', ['story' => $story->id]));
         $response->assertRedirect(route('verification.notice'));
         $this->assertDatabaseHas('stories', ['id' => $story->id]);
+    }
+
+    /**
+     * Test that viewing a story dispatches the StoryViewed event
+     *
+     * @return void
+     */
+    #[Test]
+    public function show_story_dispatches_story_viewed_event()
+    {
+        Event::fake(); // Don't run the actual listeners
+
+        $story = Story::factory()->create();
+
+        $this->get(route('stories.read', ['id' => $story->id]));
+
+        Event::assertDispatched(StoryViewed::class, function ($event) use ($story) {
+            return $event->story->id === $story->id;
+        });
+    }
+
+    /**
+     * Test that viewing a story increments views and score only once per session
+     *
+     * @return void
+     */
+    #[Test]
+    public function viewing_a_story_increments_views_and_score_once_per_session()
+    {
+        $story = Story::factory()->create(['views' => 0, 'score' => 0]);
+
+        // First view, should increment
+        $response1 = $this->get(route('stories.read', ['id' => $story->id]));
+        $response1->assertOk();
+
+        // Refresh the story model from the database
+        $story->refresh();
+
+        $this->assertEquals(1, $story->views);
+        $this->assertEquals(1, $story->score);
+
+        // Second view in the same session, should NOT increment
+        $response2 = $this->withSession(['story_viewed_' . $story->id => true])->get(route('stories.read', ['id' => $story->id]));
+        $response2->assertOk();
+
+        // Refresh the story model again
+        $story->refresh();
+
+        $this->assertEquals(1, $story->views);
+        $this->assertEquals(1, $story->score);
     }
 
 }
