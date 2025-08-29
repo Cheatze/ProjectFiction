@@ -126,5 +126,114 @@ class LikesControllerTest extends TestCase
         $this->assertEquals(1, $story->likes);
     }
 
+    /**
+     * Test that a user cannot unlike a story they haven't liked.
+     */
+    #[Test]
+    public function user_cannot_unlike_a_story_they_haven_t_liked(): void
+    {
+        $this->actingAs($this->verifiedUser);
+        $story = Story::factory()->create();
 
+        $response = $this->post(route('stories.dislike', ['story' => $story->id]));
+
+        $response->assertSessionHas('error', 'You have not liked this story yet.');
+        $response->assertRedirect();
+
+        $this->assertDatabaseMissing('likes', [
+            'user_id' => $this->verifiedUser->id,
+            'story_id' => $story->id,
+        ]);
+    }
+
+    /**
+     * Test that guests cannot like a story.
+     */
+    #[Test]
+    public function guest_cannot_like_a_story(): void
+    {
+        $story = Story::factory()->create();
+        $response = $this->post(route('stories.like', ['story' => $story->id]));
+        $response->assertRedirect('/login');
+
+        $this->assertDatabaseMissing('likes', [
+            'user_id' => null,
+            'story_id' => $story->id,
+        ]);
+    }
+
+    /**
+     * Test that guests cannot unlike a story.
+     */
+    #[Test]
+    public function guest_cannot_unlike_a_story(): void
+    {
+        $story = Story::factory()->create();
+        $response = $this->post(route('stories.dislike', ['story' => $story->id]));
+        $response->assertRedirect('/login');
+
+        $this->assertDatabaseMissing('likes', [
+            'user_id' => null,
+            'story_id' => $story->id,
+        ]);
+    }
+
+    /**
+     * Test that an unverified user cannot like a story.
+     */
+    #[Test]
+    public function unverified_user_cannot_like_a_story(): void
+    {
+        $this->actingAs($this->unverifiedUser);
+        $story = Story::factory()->create();
+
+        $response = $this->post(route('stories.like', ['story' => $story->id]));
+
+        $response->assertRedirect(route('verification.notice'));
+        $this->assertDatabaseMissing('likes', [
+            'user_id' => $this->unverifiedUser->id,
+            'story_id' => $story->id,
+        ]);
+    }
+
+    /**
+     * Test that an unverified user cannot unlike a story.
+     */
+    #[Test]
+    public function unverified_user_cannot_unlike_a_story(): void
+    {
+        $this->actingAs($this->unverifiedUser);
+        $story = Story::factory()->create();
+        $story->likers()->attach($this->unverifiedUser->id);
+
+        $response = $this->post(route('stories.dislike', ['story' => $story->id]));
+
+        $response->assertRedirect(route('verification.notice'));
+        $this->assertDatabaseHas('likes', [
+            'user_id' => $this->unverifiedUser->id,
+            'story_id' => $story->id,
+        ]);
+    }
+
+    /**
+     * Test that liking a non-existent story returns a 404.
+     */
+    #[Test]
+    public function liking_a_non_existent_story_returns_404(): void
+    {
+        $this->actingAs($this->verifiedUser);
+        $response = $this->post(route('stories.like', ['story' => 9999]));
+        $response->assertNotFound();
+    }
+
+    /**
+     * Test that unliking a non-existent story returns a 404.
+     */
+    #[Test]
+    public function unliking_a_non_existent_story_returns_404(): void
+    {
+        $this->actingAs($this->verifiedUser);
+        $response = $this->post(route('stories.dislike', ['story' => 9999]));
+        $response->assertNotFound();
+    }
 }
