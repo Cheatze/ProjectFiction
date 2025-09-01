@@ -87,8 +87,8 @@ Route::middleware('auth')->group(function () {
 //Routes only for those who are logged in and verified
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get(uri: '/write', action: [\App\Http\Controllers\StoriesController::class, 'showWrite'])->name('show.write');
-    //The route for submitting a story
-    Route::post(uri: '/write', action: [\App\Http\Controllers\StoriesController::class, 'submitStory'])->name('write');
+    //The route for submitting a story plus rate limiting middleware
+    Route::post(uri: '/write', action: [\App\Http\Controllers\StoriesController::class, 'submitStory'])->middleware(['throttle:minute-submit-limiter', 'throttle:hour-submit-limiter', 'throttle:day-submit-limiter'])->name('write');
     //The rote for deleting a story
     Route::post(uri: '/delete/{story}', action: [\App\Http\Controllers\StoriesController::class, 'deleteStory'])->name('delete');
     //The route for subscribing to a user
@@ -100,6 +100,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //The route for unliking a story
     Route::post('/stories/unlike/{story}', [\App\Http\Controllers\LikesController::class, 'unlike'])->name('stories.dislike');
 });
+
+//  
 
 //Route to verification reminder and verification email resend form
 Route::get('/email/verify', function () {

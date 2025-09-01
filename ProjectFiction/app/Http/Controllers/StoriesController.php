@@ -111,27 +111,6 @@ class StoriesController extends Controller
 
         event(new StoryViewed($story));
 
-        // Check if the story has already been viewed in this session
-        // $sessionKey = 'story_viewed_' . $story->id;
-
-        // if (!Session::has($sessionKey)) {
-        //     // Log the view and score increment
-        //     Log::channel('stories')->info('Incrementing views and score', ['story_id' => $id]);
-
-        //     // Increment the views and score
-        //     $story->increment('views');
-        //     $story->increment('score');
-
-        //     // Set the session flag
-        //     Session::put($sessionKey, true);
-
-        //     // Log the successful increment
-        //     Log::channel('stories')->info('Views and score updated successfully', ['story_id' => $id, 'new_views' => $story->views, 'new_score' => $story->score]);
-        // } else {
-        //     // Log that the story has already been viewed this session
-        //     Log::channel('stories')->info('Story already viewed this session', ['story_id' => $id]);
-        // }
-
         // Check if a user is authenticated
         $currentUser = Auth::user();
         if ($currentUser !== null) {
