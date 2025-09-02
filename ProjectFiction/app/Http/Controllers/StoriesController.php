@@ -182,4 +182,23 @@ class StoriesController extends Controller
         return back();
     }
 
+    /**
+     * Display a random story.
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function random()
+    {
+        // Fetch a random story from the database.
+        $story = Story::inRandomOrder()->first();
+
+        // Check if a story was found.
+        if ($story) {
+            // Redirect to the show method with the random story's ID.
+            return redirect()->route('stories.read', ['id' => $story->id]);
+        }
+
+        // If no story is found, you can return a 404 or a custom view.
+        abort(404, 'No stories found.');
+    }
+
 }
