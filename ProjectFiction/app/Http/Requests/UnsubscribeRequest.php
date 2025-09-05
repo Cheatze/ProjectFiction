@@ -13,7 +13,8 @@ class UnsubscribeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $subscribedToId = $this->input('id');
+        return Auth::user()->subscribedTo()->where('user_id', $subscribedToId)->exists();
     }
 
     /**
@@ -24,7 +25,7 @@ class UnsubscribeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'id' => 'required|integer|exists:users,id',
         ];
     }
 }

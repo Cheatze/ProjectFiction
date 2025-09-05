@@ -59,7 +59,7 @@ class SubscriptionService
 
     }
 
-    public function unsubscribeFromUser(Request $request)
+    public function unsubscribeFromUser(UnsubscribeRequest $request)
     {
 
         $subscriberId = Auth::id(); // The ID of the current authenticated user

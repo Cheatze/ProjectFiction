@@ -7,7 +7,7 @@
 <ul>
     @foreach ($stories as $story)
         <div>
-        <li><a href="{{ route('stories.read', ['id' => $story->id]) }}">{{ $story->title }}</a></li>
+        <li><a href="{{ route('stories.read', ['story' => $story->id]) }}">{{ $story->title }}</a></li>
         <li><a href="{{ route('profile.show', ['user' => $story->user->id]) }}">{{ $story->user->name }}</a></li>
         <li>{{ $story->genre }}</li>
         <li><p>{{ $story->synopsis }}</p></li>

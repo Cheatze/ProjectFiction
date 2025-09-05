@@ -28,7 +28,7 @@ Route::controller(StoriesController::class)->group(function () {
     //Route for the search bar
     Route::get('/search', 'showSearch')->name('show.search');
     //Shows the read page for the story with a certain id
-    Route::get('/story/{id}', 'showStory')->name('stories.read');
+    Route::get('/story/{story}', 'showStory')->name('stories.read');
     //Route for a random story
     Route::get('/random', 'random')->name('stories.random');
 });

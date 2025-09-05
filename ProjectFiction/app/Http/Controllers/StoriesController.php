@@ -95,19 +95,19 @@ class StoriesController extends Controller
      * @param mixed $id
      * @return \Illuminate\Contracts\View\View
      */
-    public function showStory($id)
+    public function showStory(Story $story)
     {
-        log::channel('stories')->info('User accessed story reading page', ['story_id' => $id]);
+        log::channel('stories')->info('User accessed story reading page', ['story_id' => $story->id]);
 
         //Could possibly be replaced with type casting but I get errors when I try
-        $story = Story::where('id', $id)->first();
+        //$story = Story::where('id', $id)->first();
 
         if (!$story) {
-            log::channel('stories')->error('Story not found', ['story_id' => $id]);
+            log::channel('stories')->error('Story not found', ['story_id' => $story->id]);
             abort(404); // Or handle the error as needed
         }
 
-        log::channel('stories')->info('Story content retrieved', ['story_id' => $id]);
+        log::channel('stories')->info('Story content retrieved', ['story_id' => $story->id]);
 
         event(new StoryViewed($story));
 
