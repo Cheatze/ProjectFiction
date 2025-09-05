@@ -141,7 +141,7 @@ class StoriesControllerTest extends TestCase
     {
         $story = Story::factory()->create(['content' => '<p>This is <strong>bold</strong> content.</p>']);
 
-        $response = $this->get(route('stories.read', ['id' => $story->id]));
+        $response = $this->get(route('stories.read', ['story' => $story->id]));
 
         $response->assertOk();
         $response->assertViewIs('read');
@@ -154,7 +154,7 @@ class StoriesControllerTest extends TestCase
     #[Test]
     public function it_returns_404_for_non_existent_story()
     {
-        $response = $this->get(route('stories.read', ['id' => 99999]));
+        $response = $this->get(route('stories.read', ['story' => 99999]));
         $response->assertNotFound();
     }
 
@@ -303,7 +303,7 @@ class StoriesControllerTest extends TestCase
 
         $story = Story::factory()->create();
 
-        $this->get(route('stories.read', ['id' => $story->id]));
+        $this->get(route('stories.read', ['story' => $story->id]));
 
         Event::assertDispatched(StoryViewed::class, function ($event) use ($story) {
             return $event->story->id === $story->id;
@@ -321,7 +321,7 @@ class StoriesControllerTest extends TestCase
         $story = Story::factory()->create(['views' => 0, 'score' => 0]);
 
         // First view, should increment
-        $response1 = $this->get(route('stories.read', ['id' => $story->id]));
+        $response1 = $this->get(route('stories.read', ['story' => $story->id]));
         $response1->assertOk();
 
         // Refresh the story model from the database
@@ -331,7 +331,7 @@ class StoriesControllerTest extends TestCase
         $this->assertEquals(1, $story->score);
 
         // Second view in the same session, should NOT increment
-        $response2 = $this->withSession(['story_viewed_' . $story->id => true])->get(route('stories.read', ['id' => $story->id]));
+        $response2 = $this->withSession(['story_viewed_' . $story->id => true])->get(route('stories.read', ['story' => $story->id]));
         $response2->assertOk();
 
         // Refresh the story model again

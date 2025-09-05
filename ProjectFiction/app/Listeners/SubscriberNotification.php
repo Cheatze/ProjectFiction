@@ -18,6 +18,9 @@ class SubscriberNotification implements ShouldQueue
 {
     use InteractsWithQueue;
 
+    public $queue = 'notifications';
+    public $tries = 5;
+
     /**
      * Create the event listener.
      */

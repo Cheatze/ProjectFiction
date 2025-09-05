@@ -8,9 +8,12 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
-class IncrementStoryViewsAndScore
+class IncrementStoryViewsAndScore implements ShouldQueue
 {
-    //use InteractsWithQueue;
+    use InteractsWithQueue;
+
+    public $queue = 'high';
+    public $tries = 3;
 
     /**
      * Create the event listener.
