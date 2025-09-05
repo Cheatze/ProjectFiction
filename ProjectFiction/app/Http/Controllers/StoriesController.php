@@ -47,7 +47,7 @@ class StoriesController extends Controller
      */
     public function showPopular()
     {
-        $list = Story::Popular()->paginate(15);
+        $list = Story::withAuthor()->paginate(15);
 
         Log::channel('stories')->info('Showing popular stories', ['count' => $list->count()]);
 
@@ -150,7 +150,7 @@ class StoriesController extends Controller
         $story->synopsis = $request->input('synopsis');
         $story->genre = $request->input('genre');
         //$story->content = $request->input('story');
-        $story->content = Purify::clean($request->input('story'));
+        $story->content = Purify::config('story')->clean($request->input('story'));
         $story->user_id = $user->id; // Assign the current user's ID
         $story->save();
 
@@ -196,7 +196,7 @@ class StoriesController extends Controller
         // Check if a story was found.
         if ($story) {
             // Redirect to the show method with the random story's ID.
-            return redirect()->route('stories.read', ['id' => $story->id]);
+            return redirect()->route('stories.read', ['story' => $story->id]);
         }
 
         log::channel('stories')->warning('No stories found for random selection');
