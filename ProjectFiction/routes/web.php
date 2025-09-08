@@ -43,14 +43,14 @@ Route::get(uri: '/', action: [\App\Http\Controllers\MainController::class, 'inde
 /**
  * Route to public profile
  */
-Route::get('/profile/{user}', [\App\Http\Controllers\UserController::class, 'showProfile'])->name('profile.show');
+Route::get('/profile/{user}', [\App\Http\Controllers\ProfileController::class, 'showProfile'])->name('profile.show');
 
 /**
  * Route to the private profile 
  * With custom middleware to make sure the user can only reach their own
  */
 Route::middleware(['auth', EnsureUserOwnsProfile::class])->group(function () {
-    Route::get('/privateprofile/{user}', [\App\Http\Controllers\UserController::class, 'showPrivateProfile'])->name('privateprofile.show');
+    Route::get('/privateprofile/{user}', [\App\Http\Controllers\ProfileController::class, 'showPrivateProfile'])->name('privateprofile.show');
 });
 
 /**
