@@ -20,92 +20,92 @@ class AuthController extends Controller
 {
 
 
-    public function showRegister()
-    {
-        return view('auth.register');
-    }
+    // public function showRegister()
+    // {
+    //     return view('auth.register');
+    // }
 
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    public function showReset()
-    {
-        return view('auth.forgot-password');
-    }
+    // public function showReset()
+    // {
+    //     return view('auth.forgot-password');
+    // }
 
-    /**
-     * Validates email and sends password reset email
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function sendResetEmail(SendResetEmailRequest $request)
-    {
-        //$request->validate(['email' => 'required|email']);
+    // /**
+    //  * Validates email and sends password reset email
+    //  * @param \Illuminate\Http\Request $request
+    //  * @return \Illuminate\Http\RedirectResponse
+    //  */
+    // public function sendResetEmail(SendResetEmailRequest $request)
+    // {
+    //     //$request->validate(['email' => 'required|email']);
 
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+    //     $status = Password::sendResetLink(
+    //         $request->only('email')
+    //     );
 
-        return $status === Password::ResetLinkSent
-            ? back()->with(['status' => __($status)])
-            : back()->withErrors(['email' => __($status)]);
-    }
+    //     return $status === Password::ResetLinkSent
+    //         ? back()->with(['status' => __($status)])
+    //         : back()->withErrors(['email' => __($status)]);
+    // }
 
-    /**
-     * Shows the view with the form where the user can reset their password
-     * Gives the token send to the user in the email to that view
-     * @param mixed $token
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function showResetForm($token)
-    {
-        return view('auth.reset-password', ['token' => $token]);
-    }
+    // /**
+    //  * Shows the view with the form where the user can reset their password
+    //  * Gives the token send to the user in the email to that view
+    //  * @param mixed $token
+    //  * @return \Illuminate\Contracts\View\View
+    //  */
+    // public function showResetForm($token)
+    // {
+    //     return view('auth.reset-password', ['token' => $token]);
+    // }
 
-    /**
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function resetPassword(ResetPasswordRequest $request)
-    {
+    // /**
+    //  * 
+    //  * @param \Illuminate\Http\Request $request
+    //  * @return \Illuminate\Http\RedirectResponse
+    //  */
+    // public function resetPassword(ResetPasswordRequest $request)
+    // {
 
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user, string $password) {
-                $user->forceFill([
-                    'password' => Hash::make($password)
-                ])->setRememberToken(Str::random(60));
+    //     $status = Password::reset(
+    //         $request->only('email', 'password', 'password_confirmation', 'token'),
+    //         function (User $user, string $password) {
+    //             $user->forceFill([
+    //                 'password' => Hash::make($password)
+    //             ])->setRememberToken(Str::random(60));
 
-                $user->save();
+    //             $user->save();
 
-                event(new PasswordReset($user));
-            }
-        );
+    //             event(new PasswordReset($user));
+    //         }
+    //     );
 
-        return $status === Password::PasswordReset
-            ? redirect()->route('show.login')->with('status', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
-    }
+    //     return $status === Password::PasswordReset
+    //         ? redirect()->route('show.login')->with('status', __($status))
+    //         : back()->withErrors(['email' => [__($status)]]);
+    // }
 
-    /**
-     * Creates a new user in the db and automatically logs the user in with that account
-     * @param \Illuminate\Http\Request $request
-     * @return mixed|\Illuminate\Http\RedirectResponse
-     */
-    public function register(RegisterUserRequest $request)
-    {
+    // /**
+    //  * Creates a new user in the db and automatically logs the user in with that account
+    //  * @param \Illuminate\Http\Request $request
+    //  * @return mixed|\Illuminate\Http\RedirectResponse
+    //  */
+    // public function register(RegisterUserRequest $request)
+    // {
 
-        $validated = $request->validated();
+    //     $validated = $request->validated();
 
-        $user = User::create($validated);
-        event(new Registered($user));//This should trigger a listener that sends the email
-        Auth::login($user);
+    //     $user = User::create($validated);
+    //     event(new Registered($user));//This should trigger a listener that sends the email
+    //     Auth::login($user);
 
-        return redirect()->route('verification.notice');
-    }
+    //     return redirect()->route('verification.notice');
+    // }
 
     public function login(LoginRequest $request)
     {
