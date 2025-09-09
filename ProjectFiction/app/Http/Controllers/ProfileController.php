@@ -24,11 +24,6 @@ class ProfileController extends Controller
 
         $list = $storyService->getUserStories($user);
 
-        // $list = $user->stories() // Access the relationship
-        //     ->select('id', 'title', 'genre', 'synopsis')
-        //     ->orderBy('id', 'desc')
-        //     ->paginate(15);
-
         log::channel('users')->info('Showing private profile stories list', ['user_id' => $user->id, 'count' => $list->count()]);
 
         return view('privateProfile')
@@ -45,20 +40,11 @@ class ProfileController extends Controller
     {
         log::channel('users')->info('User accessed public profile', ['user_id' => $user->id]);
 
-        //check if Auth::id() is subscribed to this user
-
-        //$user = User::where('id', $id)->first();
-
         $id = $user->id;
 
         $currentUser = Auth::user();
 
         $list = $storyService->getUserStories($user);
-
-        // $list = $user->stories() // Access the relationship
-        //     ->select('id', 'title', 'genre', 'synopsis')
-        //     ->orderBy('id', 'desc')
-        //     ->paginate(15);
 
         log::channel('users')->info('Showing public profile stories list', ['user_id' => $user->id, 'count' => $list->count()]);
 
@@ -67,13 +53,6 @@ class ProfileController extends Controller
             $isSubscribed = $subscriptionService->isSubscribed($currentUser, $user->id);
             log::channel('users')->info('Checking subscription status', ['user_id' => $currentUser->id, 'subscribed_to' => $user->id, 'is_subscribed' => $isSubscribed]);
         }
-
-        // if ($currentUser !== null) {
-        //     $isSubscribed = $currentUser->can('isSubscribed', $user);
-        //     log::channel('users')->info('Checking subscription status', ['user_id' => $currentUser->id, 'subscribed_to' => $user->id, 'is_subscribed' => $isSubscribed]);
-        // } else {
-        //     $isSubscribed = false; // If not authenticated, they cannot be subscribed
-        // }
 
         return view('profile')
             ->with('user', $user)

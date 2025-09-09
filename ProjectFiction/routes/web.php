@@ -97,9 +97,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //The route for unsubscribing from a user
     Route::delete(uri: '/unsubscribe', action: [\App\Http\Controllers\SubscriptionController::class, 'unsubscribeFromUser'])->name('unsubscribe');
     //The route for liking a story
-    Route::post('/stories/like/{story}', [\App\Http\Controllers\LikesController::class, 'like'])->name('stories.like');
+    Route::post('/stories/like/{story}', [\App\Http\Controllers\LikesController::class, 'toggle'])->name('stories.like');
     //The route for unliking a story
-    Route::post('/stories/unlike/{story}', [\App\Http\Controllers\LikesController::class, 'unlike'])->name('stories.dislike');
+    Route::post('/stories/unlike/{story}', [\App\Http\Controllers\LikesController::class, 'toggle'])->name('stories.dislike');
 });
 
 //  
