@@ -48,5 +48,17 @@ class SubscriptionService
         }
     }
 
+    /**
+     * Check if a user is subscribed to another user.
+     *
+     * @param User $subscriber
+     * @param int $subscribedToId
+     * @return bool
+     */
+    public function isSubscribed(User $subscriber, int $subscribedToId): bool
+    {
+        return $subscriber->subscribedTo()->where('subscribed_to_id', $subscribedToId)->exists();
+    }
+
 
 }

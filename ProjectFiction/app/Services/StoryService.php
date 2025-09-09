@@ -55,6 +55,20 @@ class StoryService
     }
 
     /**
+     * Get a paginated list of stories for a specific user.
+     *
+     * @param User $user
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getUserStories(User $user)
+    {
+        return $user->stories()
+            ->select('id', 'title', 'genre', 'synopsis')
+            ->orderBy('id', 'desc')
+            ->paginate(15);
+    }
+
+    /**
      * Retrieve a single story by its ID.
      */
     public function getStory(Story $story): Story

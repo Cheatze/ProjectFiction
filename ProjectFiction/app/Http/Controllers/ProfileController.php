@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use App\Services\StoryService;
+use App\Services\SubscriptionService;
 
 class ProfileController extends Controller
 {
@@ -16,14 +18,16 @@ class ProfileController extends Controller
      * @param \App\Models\User $user
      * @return \Illuminate\Contracts\View\View
      */
-    public function showPrivateProfile(User $user)
+    public function showPrivateProfile(User $user, StoryService $storyService)
     {
         log::channel('users')->info('User accessed private profile', ['user_id' => $user->id]);
 
-        $list = $user->stories() // Access the relationship
-            ->select('id', 'title', 'genre', 'synopsis')
-            ->orderBy('id', 'desc')
-            ->paginate(15);
+        $list = $storyService->getUserStories($user);
+
+        // $list = $user->stories() // Access the relationship
+        //     ->select('id', 'title', 'genre', 'synopsis')
+        //     ->orderBy('id', 'desc')
+        //     ->paginate(15);
 
         log::channel('users')->info('Showing private profile stories list', ['user_id' => $user->id, 'count' => $list->count()]);
 
@@ -37,7 +41,7 @@ class ProfileController extends Controller
      * @param \App\Models\User $user
      * @return \Illuminate\Contracts\View\View
      */
-    public function showProfile(User $user)
+    public function showProfile(User $user, StoryService $storyService, SubscriptionService $subscriptionService)
     {
         log::channel('users')->info('User accessed public profile', ['user_id' => $user->id]);
 
@@ -49,19 +53,27 @@ class ProfileController extends Controller
 
         $currentUser = Auth::user();
 
-        $list = $user->stories() // Access the relationship
-            ->select('id', 'title', 'genre', 'synopsis')
-            ->orderBy('id', 'desc')
-            ->paginate(15);
+        $list = $storyService->getUserStories($user);
+
+        // $list = $user->stories() // Access the relationship
+        //     ->select('id', 'title', 'genre', 'synopsis')
+        //     ->orderBy('id', 'desc')
+        //     ->paginate(15);
 
         log::channel('users')->info('Showing public profile stories list', ['user_id' => $user->id, 'count' => $list->count()]);
 
-        if ($currentUser !== null) {
-            $isSubscribed = $currentUser->can('isSubscribed', $user);
+        $isSubscribed = false;
+        if ($currentUser) {
+            $isSubscribed = $subscriptionService->isSubscribed($currentUser, $user->id);
             log::channel('users')->info('Checking subscription status', ['user_id' => $currentUser->id, 'subscribed_to' => $user->id, 'is_subscribed' => $isSubscribed]);
-        } else {
-            $isSubscribed = false; // If not authenticated, they cannot be subscribed
         }
+
+        // if ($currentUser !== null) {
+        //     $isSubscribed = $currentUser->can('isSubscribed', $user);
+        //     log::channel('users')->info('Checking subscription status', ['user_id' => $currentUser->id, 'subscribed_to' => $user->id, 'is_subscribed' => $isSubscribed]);
+        // } else {
+        //     $isSubscribed = false; // If not authenticated, they cannot be subscribed
+        // }
 
         return view('profile')
             ->with('user', $user)

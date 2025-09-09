@@ -14,7 +14,7 @@ class UnsubscribeRequest extends FormRequest
     public function authorize(): bool
     {
         $subscribedToId = $this->input('id');
-        return Auth::user()->subscribedTo()->where('user_id', $subscribedToId)->exists();
+        return Auth::user()->subscribedTo()->where('subscribed_to_id', $subscribedToId)->exists();
     }
 
     /**
