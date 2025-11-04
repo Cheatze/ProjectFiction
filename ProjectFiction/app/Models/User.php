@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use app\Notifications\NewStoryNotification;
 
 //use Illuminate\Contracts\Auth\CanResetPassword;
 
@@ -82,4 +83,27 @@ class User extends Authenticatable implements MustVerifyEmail//, CanResetPasswor
     {
         return $this->belongsToMany(User::class, 'subscriptions', 'subscribed_to_id', 'subscriber_id');
     }
+
+    /**
+     * 
+     * @param \App\Models\Story $story
+     * @return void
+     */
+    public function notifySubscribersOfNewStory(Story $story): void
+    {
+        $this->subscribers->each(function (User $subscriber) use ($story) {
+            $subscriber->notify(new NewStoryNotification($story));
+        });
+    }
+
+    /**
+     * Returns the display name for the user
+     */
+    public function getDisplayName(): string
+    {
+        return $this->name;
+    }
+
+
+
 }

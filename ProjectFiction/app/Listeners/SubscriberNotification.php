@@ -32,16 +32,22 @@ class SubscriberNotification implements ShouldQueue
     /**
      * Handle the event.
      */
+    // public function handle(StoryPosted $event): void
+    // {
+    //     $story = $event->story;
+    //     $author = $story->user;
+
+    //     // Check if the author exists and has subscribers
+    //     if ($author) {
+    //         //Sends the notification to all subscribed to that author
+    //         $author->subscribers->each(fn($subscriber) => $subscriber->notify(new NewStoryNotification($story)));
+
+    //     }
+    // }
+
     public function handle(StoryPosted $event): void
     {
-        $story = $event->story;
-        $author = $story->user;
-
-        // Check if the author exists and has subscribers
-        if ($author) {
-            //Sends the notification to all subscribed to that author
-            $author->subscribers->each(fn($subscriber) => $subscriber->notify(new NewStoryNotification($story)));
-
-        }
+        $event->story->notifySubscribers();
     }
+
 }

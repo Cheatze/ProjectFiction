@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\User;
 
 class Story extends Model
 {
@@ -88,6 +89,31 @@ class Story extends Model
     public function likers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'likes');
+    }
+
+    /**
+     * Get the author's display name.
+     * @return string
+     */
+    public function getAuthorName(): string
+    {
+        return $this->user->getDisplayName();
+    }
+
+    /**
+     * Returns the display title for the story
+     */
+    public function getDisplayTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * Notify the subscribers of the author about a new story.
+     */
+    public function notifySubscribers(): void
+    {
+        $this->user->notifySubscribersOfNewStory($this);
     }
 
 }

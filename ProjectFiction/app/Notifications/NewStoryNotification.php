@@ -39,10 +39,10 @@ class NewStoryNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject("New Story from {$this->story->userName}!") // Email subject
+            ->subject("New Story from {$this->story->getAuthorName()}!") // Email subject
             ->greeting("Hello {$notifiable->name},") // Greeting for the subscriber
             ->line("{$this->story->userName} has just submitted a new story:")
-            ->line("Title: " . $this->story->title)
+            ->line("Title: " . $this->story->getDisplayTitle())
             ->action('View Story', route('stories.read', $this->story->id)) // A call-to-action button
             ->line('Thank you for being a subscriber!');
     }
@@ -56,9 +56,9 @@ class NewStoryNotification extends Notification implements ShouldQueue
     {
         return [
             'story_id' => $this->story->id,
-            'story_title' => $this->story->title,
+            'story_title' => $this->story->getDisplayTitle(),
             'story_url' => route('stories.read', $this->story->id),
-            'author_name' => $this->story->userName ?? 'A user',
+            'author_name' => $this->story->getAuthorName() ?? 'A user',
         ];
     }
 }

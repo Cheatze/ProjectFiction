@@ -128,13 +128,6 @@ class StoriesController extends Controller
 
         // Check if a user is authenticated
         $currentUser = Auth::user();
-        // if ($currentUser !== null) {
-        //     // Check if the authenticated user has liked this specific story
-        //     $hasLiked = $story->likers()->where('user_id', $currentUser->id)->exists();
-        //     Log::channel('stories')->info('User like status checked', ['story_id' => $story->id, 'user_id' => $currentUser->id, 'has_liked' => $hasLiked]);
-        // } else {
-        //     $hasLiked = false;
-        // }
 
         $hasLiked = $storyService->hasUserLikedStory($story, $currentUser);
 
@@ -164,16 +157,6 @@ class StoriesController extends Controller
         $data = $request->validated();
         // Use the StoryService to create and save the story
         $story = $storyService->createStory($data, $user);
-
-        // Create a new Story instance
-        // $story = new Story();
-        // $story->title = $request->input('title');
-        // $story->synopsis = $request->input('synopsis');
-        // $story->genre = $request->input('genre');
-        // //$story->content = $request->input('story');
-        // $story->content = Purify::config('story')->clean($request->input('story'));
-        // $story->user_id = $user->id; // Assign the current user's ID
-        // $story->save();
 
         log::channel('stories')->info('Story saved to database', ['story_id' => $story->id, 'user_id' => $user->id]);
 
